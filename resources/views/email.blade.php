@@ -383,7 +383,7 @@ w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 				<tbody><tr><td>
 					<table width="100%" cellpadding="0" cellspacing="0" align="left">
 						<tbody><tr><td>
-								<span style="color:#fff;">PT. Gunung Raja Paksi </span>
+								<span style="color:#fff;">PT. Garuda Yamato Steel </span>
 						</td></tr></tbody>
 					</table>
 					<table width="100%" cellpadding="0" cellspacing="0" align="left">

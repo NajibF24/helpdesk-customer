@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>GRP Global Service Management System</title>
+    <title>GYS Global Service Management System</title>
 	<link rel="shortcut icon" href="{{ URL::to('/') }}/grp_bg_logo.png"/>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -102,7 +102,7 @@
 					<div class="box-input-login">
 						<div class="text-center">
 							<!-- /.login-logo -->
-							<img style="height: 100px;" src="{{ URL::to('/') }}/grp_bg_logo.png" alt="GRP Logo" title="GRP Logo" class="img-fluid mx-auto"/>
+							<img style="height: 100px;" src="{{ URL::to('/') }}/grp_bg_logo.png" alt="GYS Logo" title="GYS Logo" class="img-fluid mx-auto"/>
 						</div>
 
 
