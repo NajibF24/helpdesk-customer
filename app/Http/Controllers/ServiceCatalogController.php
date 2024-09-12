@@ -411,7 +411,7 @@ class ServiceCatalogController extends Controller {
 			//return redirect('/ticket-monitoring');
 		} catch (\Throwable $th) {
 			DB::rollBack();
-			Log::error($th->getMessage());
+			Log::error($th->getMessage(). ' File: ' .$th->getFile(). ' Line: ' .$th->getLine());
 			$redirect = URL('/').'/myServices';
 
 			echo json_encode(["success"=>false,"message"=>"error","redirect"=>$redirect]);
