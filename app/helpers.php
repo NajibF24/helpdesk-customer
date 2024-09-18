@@ -1044,43 +1044,32 @@ if (!function_exists('getContactCaseJourney')) {
                                     }
                                     // dd($cek_multiple);
 									if(!empty($atasan['id'])) { //kalau kosong diskip ke loop berikutnya
+										$ticket_approval = DB::table('ticket_approval')
+															->where('ticket_id',$ticket->id)
+															->where('approval_id',$atasan['id'])
+															->get();
+                                                            // dd([$cek_multiple, $ticket_approval]);
 										//tambahkan ke list
 										$atasan['step_approval'] = "approval support";
 										$atasan['type_approval'] = "approval support custom";
 										$list_contact_case_journey[] = $atasan;
-										$jml_approver_tertentu_di_case_journey = 0;
-										foreach($list_contact_case_journey as $select_contact) {
-											if($select_contact['contact_id'] == $atasan['id']) {
-												$jml_approver_tertentu_di_case_journey++;
-											}
-										}
-
-
-										$count_approver_has_approve = DB::table('ticket_approval')
-											->selectRaw('COUNT(approval_id) as count_approve')
-											->where('ticket_id',$ticket->id)
-											->where('approval_id',$atasan['id'])
-											->value('count_approve');
-
 										$t_ap = null;
-										if($jml_approver_tertentu_di_case_journey <= $count_approver_has_approve) {
-											//kalau approver x sudah melalukan approve lebih banyak atau sama dengan yg 
-											//total approver x yg tercatat di case journey 
-											//berarti dianggap sudah approved
-											//kalau sebaliknya, maka dianggap belum approve utk step approver saat ini
-											
-											//get row approval yg paling tepat saat 
-											//approver tsb melakukan approve
-											//agar tanggalny sesuai
+                                        if ($ticket_approval->isEmpty()) {
                                             $t_ap = DB::table('ticket_approval')
-												->where('ticket_id',$ticket->id)
-												->where('approval_id',$atasan['id'])
-												->offset($jml_approver_tertentu_di_case_journey - 1)->limit(1) //misal jml ad 2, maka ambil offsetnya 1, karena offset dimulai dari 0 
-												->first();
-										}
-
+                                            ->where('ticket_id',$ticket->id)
+                                            ->where('approval_id',$atasan['id'])
+                                            ->first();
+                                        }
+                                        if (empty($ticket_approval[$cek_multiple]) && $cek_multiple == 1 && !empty($ticket_approval[0])) {
+                                            $ticket_approval[$cek_multiple] = $ticket_approval[0];
+                                            $ticket_approval[$cek_multiple]->status = null;
+                                            $t_ap = $ticket_approval[$cek_multiple];
+                                        }
 										print_approver_case_journey($need_html_output_case_journey,$atasan,$t_ap);
-
+                                        // dd($ticket_approval);
+									} else {
+										//atasan tidak ditemukan
+										$ticket_approval = null;
 									}
 
 								}
