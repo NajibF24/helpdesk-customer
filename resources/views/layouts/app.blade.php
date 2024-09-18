@@ -439,7 +439,7 @@
 				<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
 					<!--begin::Header-->
 					{{-- <div id="kt_header" class="header header-fixed" style="background-color: #12344d;"> --}}
-					<div id="kt_header" class="header header-fixed" style="background: url({{ URL::to('/assets/images/bg_side.jpg') }}) repeat;overflow-y:auto;background-position: top;background-repeat: no-repeat;background-size: cover; overflow-y: unset !important;">
+					<div id="kt_header" class="header header-fixed" style="background: url({{ URL::to('/assets/images/nav.png') }}) repeat;overflow-y:auto;background-position: top;background-repeat: no-repeat;background-size: cover; overflow-y: unset !important;">
 						<!--begin::Container-->
 						<div class="container-fluid d-flex align-items-stretch justify-content-between">
 							<!--begin::Left-->
