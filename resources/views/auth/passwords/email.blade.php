@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>GRP Service Management System - Employee Portal</title>
+    <title>GYS Service Management System - Employee Portal</title>
     <link rel="shortcut icon" href="{{URL('/')}}/grp_bg_logo.png"/>
 
     <!-- Tell the browser to be responsive to screen width -->

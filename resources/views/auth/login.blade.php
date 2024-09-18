@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>GRP Global Service Management System</title>
+    <title>GYS Global Service Management System</title>
 	<link rel="shortcut icon" href="{{ URL::to('/') }}/grp_bg_logo.png"/>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -47,7 +47,7 @@
     overflow: hidden;border:0px solid #1176BC;margin:0 -12px 0 -15px;display:block;padding-left:0px;padding-right:0px;">
 	<div class="row">
 		<div class="col-md-9 col-left" style="padding:0;background:#fff;height:100vh;">
-			<div style="overflow:hidden;height: 78vh;padding: 0 0px 0 0;display: flex;margin-top:0%;">
+			<div style="overflow:hidden;height: 100vh;padding: 0 0px 0 0;display: flex;margin-top:0%;">
 				<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="height:100%;width:100%;">
 				  <div class="carousel-indicators">
 					<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -87,9 +87,9 @@
 				</div>
 
 			</div>
-			<div style="display:block;height:22vh;width:100%;padding-left:20px;padding-right:20px;">
+			{{-- <div style="display:block;height:22vh;width:100%;padding-left:20px;padding-right:20px;">
 				<div style="display:block;height:22vh;width:100%;margin-top:0;background-image:url({{ URL::to('/') }}/assets/images/logos.png);background-size:contain;background-position:center;background-repeat:no-repeat"></div>
-			</div>
+			</div> --}}
 		</div>
 		<div class="col-md-3 col-sm-12" style="background-image: url({{ URL::to('/assets/images/bg_side.jpg') }});height:100vh;overflow-y:auto;background-position: center;background-repeat: no-repeat;background-size: cover;">
 
@@ -102,7 +102,7 @@
 					<div class="box-input-login">
 						<div class="text-center">
 							<!-- /.login-logo -->
-							<img style="height: 100px;" src="{{ URL::to('/') }}/grp_bg_logo.png" alt="GRP Logo" title="GRP Logo" class="img-fluid mx-auto"/>
+							<img style="height: 100px;" src="{{ URL::to('/') }}/grp_bg_logo.png" alt="GYS Logo" title="GYS Logo" class="img-fluid mx-auto"/>
 						</div>
 
 

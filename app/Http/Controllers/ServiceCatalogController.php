@@ -7,6 +7,7 @@ use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Laracasts\Flash\Flash;
 
 use Illuminate\Support\Facades\Schema;
@@ -410,6 +411,7 @@ class ServiceCatalogController extends Controller {
 			//return redirect('/ticket-monitoring');
 		} catch (\Throwable $th) {
 			DB::rollBack();
+			Log::error($th->getMessage(). ' File: ' .$th->getFile(). ' Line: ' .$th->getLine());
 			$redirect = URL('/').'/myServices';
 
 			echo json_encode(["success"=>false,"message"=>"error","redirect"=>$redirect]);

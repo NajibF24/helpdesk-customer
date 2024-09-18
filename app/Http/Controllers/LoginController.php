@@ -280,7 +280,7 @@ class LoginController extends Controller
 		ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0);
 
 		$dn = config('adldap.basedn');
-		$ldapbind = @ldap_bind($ldap_conn, "$username@gunungsteel.com", "$pass"); //here is the LDAP Auth
+		$ldapbind = @ldap_bind($ldap_conn, "$username@gyssteel.com", "$pass"); //here is the LDAP Auth
 
 		$return = array();
 
