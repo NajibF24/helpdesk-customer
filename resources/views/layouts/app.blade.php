@@ -3,7 +3,7 @@
 <html lang="en">
 	<head><base href="">
 		<meta charset="utf-8" />
-		<title>Employee Portal - PT. Gunung Raja Paksi Tbk.</title>
+		<title>Employee Portal - PT. Garuda Yamato Steel Tbk.</title>
 		<meta name="description" content="Updates and statistics" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 		<link rel="canonical" href="https://keenthemes.com/metronic" />
