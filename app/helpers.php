@@ -5824,4 +5824,11 @@ if (!function_exists('notif_to_all_needed_contact_inventory')) {
 
 
 	}
+
+	function removeSpecialCharacters($input) {
+        $pattern = '/[^a-zA-Z0-9 .]/';
+        $result = preg_replace($pattern, '', $input);
+
+		return $result;
+	}
 }

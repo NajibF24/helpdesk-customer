@@ -752,7 +752,7 @@ class CrudController extends AppBaseController
 			$file = $request->file('file');
 			if($request->hasFile('file'))
 			{
-				$filename = izrand(5).'-'.$file->getClientOriginalName();
+				$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
 				handleUpload($file,$filename,'/upload');
 				$list_filename[] = $filename;
 				$list_file_url[] = URL('/').'/uploads/'.$filename;
@@ -760,7 +760,7 @@ class CrudController extends AppBaseController
 			$file = $request->file('file2');
 			if($request->hasFile('file2'))
 			{
-				$filename = izrand(5).'-'.$file->getClientOriginalName();
+				$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
 				handleUpload($file,$filename,'/upload');
 				$list_filename[] = $filename;
 				$list_file_url[] = URL('/').'/uploads/'.$filename;
@@ -768,7 +768,7 @@ class CrudController extends AppBaseController
 			$file = $request->file('file3');
 			if($request->hasFile('file3'))
 			{
-				$filename = izrand(5).'-'.$file->getClientOriginalName();
+				$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
 				handleUpload($file,$filename,'/upload');
 				$list_filename[] = $filename;
 				$list_file_url[] = URL('/').'/uploads/'.$filename;
@@ -2178,7 +2178,7 @@ class CrudController extends AppBaseController
 						if($request->hasFile($key))
 						{
 							foreach ($files as $file) {
-								$filename = izrand(5).'-'.$file->getClientOriginalName();
+								$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
 								handleUpload($file,$filename,'/upload');
 								$list_filename[] = $filename;
 								//$file->store('upload/' . $filename . '/messages');
@@ -2197,7 +2197,7 @@ class CrudController extends AppBaseController
 						$file = $request->file($key);
 						if($request->hasFile($key))
 						{
-							$filename = izrand(5).'-'.$file->getClientOriginalName();
+							$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
 							handleUpload($file,$filename,'/upload');
 							$input[$key] = $filename;
 

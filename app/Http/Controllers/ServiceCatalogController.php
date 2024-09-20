@@ -207,7 +207,7 @@ class ServiceCatalogController extends Controller {
 			$file = $request->file('file');
 			if($request->hasFile('file'))
 			{
-				$filename = izrand(5).'-'.$file->getClientOriginalName();
+				$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
 				handleUpload($file,$filename,'/upload');
 				$list_filename[] = $filename;
 				$list_file_url[] = URL('/').'/uploads/'.$filename;
@@ -215,7 +215,7 @@ class ServiceCatalogController extends Controller {
 			$file = $request->file('file2');
 			if($request->hasFile('file2'))
 			{
-				$filename = izrand(5).'-'.$file->getClientOriginalName();
+				$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
 				handleUpload($file,$filename,'/upload');
 				$list_filename[] = $filename;
 				$list_file_url[] = URL('/').'/uploads/'.$filename;
@@ -223,7 +223,7 @@ class ServiceCatalogController extends Controller {
 			$file = $request->file('file3');
 			if($request->hasFile('file3'))
 			{
-				$filename = izrand(5).'-'.$file->getClientOriginalName();
+				$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
 				handleUpload($file,$filename,'/upload');
 				$list_filename[] = $filename;
 				$list_file_url[] = URL('/').'/uploads/'.$filename;
