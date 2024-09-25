@@ -50,23 +50,23 @@
 			<div style="overflow:hidden;height: 100vh;padding: 0 0px 0 0;display: flex;margin-top:0%;">
 				<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="height:100%;width:100%;">
 				  <div class="carousel-indicators">
-					<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+					{{-- <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button> --}}
+					{{-- <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button> --}}
+					<button type="button" class="active" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" aria-label="Slide 1"></button>
 					<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+					{{-- <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 4"></button> --}}
 					<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-					<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
-					<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 4"></button>
-					<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="5" aria-label="Slide 4"></button>
 				  </div>
 				  <div class="carousel-inner" style="height:100%;">
-					<div class="carousel-item active" style="height:100%;" data-bs-interval="2000">
+					{{-- <div class="carousel-item active" style="height:100%;" data-bs-interval="2000">
 
 					  <div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_1.jpg)"></div>
-					</div>
-					<div class="carousel-item" style="height:100%;" data-bs-interval="2000">
+					</div> --}}
+					{{-- <div class="carousel-item" style="height:100%;" data-bs-interval="2000">
 
 					  <div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_2.jpg)"></div>
-					</div>
-					<div class="carousel-item" style="height:100%;" data-bs-interval="2000">
+					</div> --}}
+					<div class="carousel-item active" style="height:100%;" data-bs-interval="2000">
 
 						<div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_3.jpg)"></div>
 					</div>
@@ -74,10 +74,10 @@
 
 						<div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_4.jpg)"></div>
 					</div>
-					<div class="carousel-item" style="height:100%;" data-bs-interval="2000">
+					{{-- <div class="carousel-item" style="height:100%;" data-bs-interval="2000">
 
 						<div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_5.jpg)"></div>
-					</div>
+					</div> --}}
 					<div class="carousel-item" style="height:100%;" data-bs-interval="2000">
 
 						<div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_6.jpg)"></div>
