@@ -70,14 +70,14 @@
 
 						<div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_3.jpg)"></div>
 					</div>
-					<div class="carousel-item" style="height:100%;" data-bs-interval="2000">
-
-						<div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_4.jpg)"></div>
-					</div>
 					{{-- <div class="carousel-item" style="height:100%;" data-bs-interval="2000">
 
-						<div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_5.jpg)"></div>
+						<div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_4.jpg)"></div>
 					</div> --}}
+					<div class="carousel-item" style="height:100%;" data-bs-interval="2000">
+
+						<div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_5.jpg)"></div>
+					</div>
 					<div class="carousel-item" style="height:100%;" data-bs-interval="2000">
 
 						<div class="img-slide" style="background-image:url({{ URL::to('/') }}/assets/images/slide_6.jpg)"></div>
