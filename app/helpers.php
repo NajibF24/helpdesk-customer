@@ -554,26 +554,27 @@ if (!function_exists('getContactCaseJourney')) {
 										foreach($semua_atasan as $atasan) {
 											//var_dump($atasan);
 											//echo "SSS";
-											if($atasan['position_id'] > $request_management->max_user_superordinate) {
-												
-											}else{
-												$ticket_approval = DB::table('ticket_approval')
-																	->where('ticket_id',$ticket->id)
-																	->where('approval_id',$atasan['contact_id'])
-																	->first();
-												$atasan['step_approval'] = "approval user";
-												$atasan['type_approval'] = "max user superordinate";
-												$list_contact_case_journey[] = $atasan;
-												print_approver_case_journey($need_html_output_case_journey,$atasan,$ticket_approval);
-	
-												$max_user_approval_level = DB::table('position')
-																	->where('id', $request_management->max_user_superordinate ?? null)
-																	->value('level');
-	
-												if(!empty($max_user_approval_level) && $max_user_approval_level <= $atasan['position_level']) {
-													//UDAH MAKSIMUM
-													break;
-												}
+											// check dulu jika position_id atasan lebih dari max_user_superordinate maka ambil 1 atasan saja untuk kebutuhan approval
+											
+											// if($atasan['position_id'] > $request_management->max_user_superordinate) {
+											// }else{
+											// }
+											$ticket_approval = DB::table('ticket_approval')
+																->where('ticket_id',$ticket->id)
+																->where('approval_id',$atasan['contact_id'])
+																->first();
+											$atasan['step_approval'] = "approval user";
+											$atasan['type_approval'] = "max user superordinate";
+											$list_contact_case_journey[] = $atasan;
+											print_approver_case_journey($need_html_output_case_journey,$atasan,$ticket_approval);
+
+											$max_user_approval_level = DB::table('position')
+																->where('id', $request_management->max_user_superordinate ?? null)
+																->value('level');
+
+											if(!empty($max_user_approval_level) && $max_user_approval_level <= $atasan['position_level']) {
+												//UDAH MAKSIMUM
+												break;
 											}
 										}
 									}
