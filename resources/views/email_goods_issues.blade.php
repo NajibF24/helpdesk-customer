@@ -414,7 +414,7 @@ w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 			<table  cellpadding="0" cellspacing="0" align="right">
 				<tbody><tr><td>
-					<img src="{{ asset('grp_bg_logo.png') }}" alt="" srcset="" width="100vw">
+					<img src="{{ asset('grp_bg_logo.png') }}" alt="" width="100" height="auto">
 				</td></tr></tbody>
 			</table>
 		</td></tr></tbody>
