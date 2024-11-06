@@ -1754,7 +1754,7 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 	//fungsi ini dipakai di approval secara keseluruhan
 	//baik di ApproveRequestController, case_journey_content, submit ServiceCatalog,ProblemCatalog,related tag notif
 	function getInventoryManagementCaseJourney($detail,$include_self = "",$include_request_management_notif = "include_request_management_notif",$need_html_output_case_journey = ""){
-
+				$semua_atasan = [];
 						$list_contact_case_journey = [];//prepare data untuk notifikasi reply, dan cc di page ini
 						$request_management = DB::table('request_management')->where('id', $detail->request_management_id)->first();
 					if(in_array(strtolower($detail->status),[
