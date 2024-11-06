@@ -396,7 +396,7 @@ w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 			<table  cellpadding="0" cellspacing="0" align="right">
 				<tbody><tr><td>
-                    <img src="{{ url('/grp_bg_logo.png') }}" class="img-fuid" alt="" srcset="" style="height: 100px">
+					<img src="{{ asset('grp_bg_logo.png') }}" alt="" width="100" height="auto">
 				</td></tr></tbody>
 			</table>
 		</td></tr></tbody>

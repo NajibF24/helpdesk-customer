@@ -554,6 +554,11 @@ if (!function_exists('getContactCaseJourney')) {
 										foreach($semua_atasan as $atasan) {
 											//var_dump($atasan);
 											//echo "SSS";
+											// check dulu jika position_id atasan lebih dari max_user_superordinate maka ambil 1 atasan saja untuk kebutuhan approval
+											
+											// if($atasan['position_id'] > $request_management->max_user_superordinate) {
+											// }else{
+											// }
 											$ticket_approval = DB::table('ticket_approval')
 																->where('ticket_id',$ticket->id)
 																->where('approval_id',$atasan['contact_id'])
@@ -577,17 +582,21 @@ if (!function_exists('getContactCaseJourney')) {
 										//user di atas atau sama dgn maxusersuperordinate
 										//atau kondisinya tidak ditemukan maxusersuperordinate
 										foreach($semua_atasan as $atasan) {
-											$ticket_approval = DB::table('ticket_approval')
-																->where('ticket_id',$ticket->id)
-																->where('approval_id',$atasan['contact_id'])
-																->first();
-
-											$atasan['step_approval'] = "approval user";
-											$atasan['type_approval'] = "max user superordinate";
-											$list_contact_case_journey[] = $atasan;
-											print_approver_case_journey($need_html_output_case_journey,$atasan,$ticket_approval);
-											//UDAH DAPAT 1 ATASAN LANGSUNG BREAK
-											break;
+											if($atasan['position_id'] > $request_management->max_user_superordinate) {
+												
+											}else{
+												$ticket_approval = DB::table('ticket_approval')
+																	->where('ticket_id',$ticket->id)
+																	->where('approval_id',$atasan['contact_id'])
+																	->first();
+	
+												$atasan['step_approval'] = "approval user";
+												$atasan['type_approval'] = "max user superordinate";
+												$list_contact_case_journey[] = $atasan;
+												print_approver_case_journey($need_html_output_case_journey,$atasan,$ticket_approval);
+												//UDAH DAPAT 1 ATASAN LANGSUNG BREAK
+												break;
+											}
 										}
 									}
 								}
@@ -1003,6 +1012,7 @@ if (!function_exists('getContactCaseJourney')) {
                             $jumlah_atasan_flow_normal = 0;
                             $id_orang_yg_approve_flow_normal = [];
                             $semua_atasan = cekSemuaAtasan($selected_contact_employee->id ?? 0);
+                            // dd($semua_atasan);
 							if(empty($request_management->approval_support_custom)) {
 								//milih approval_support_custom tapi belum input, diskip
 
@@ -1042,34 +1052,44 @@ if (!function_exists('getContactCaseJourney')) {
                                     if (in_array($atasan['id'], $id_orang_yg_approve_flow_normal)) {
                                         $cek_multiple = 1;
                                     }
-                                    // dd($cek_multiple);
 									if(!empty($atasan['id'])) { //kalau kosong diskip ke loop berikutnya
-										$ticket_approval = DB::table('ticket_approval')
-															->where('ticket_id',$ticket->id)
-															->where('approval_id',$atasan['id'])
-															->get();
-                                                            // dd([$cek_multiple, $ticket_approval]);
 										//tambahkan ke list
 										$atasan['step_approval'] = "approval support";
 										$atasan['type_approval'] = "approval support custom";
 										$list_contact_case_journey[] = $atasan;
+										$jml_approver_tertentu_di_case_journey = 0;
+										foreach($list_contact_case_journey as $select_contact) {
+											if($select_contact['contact_id'] == $atasan['id']) {
+												$jml_approver_tertentu_di_case_journey++;
+											}
+										}
+
+
+										$count_approver_has_approve = DB::table('ticket_approval')
+											->selectRaw('COUNT(approval_id) as count_approve')
+											->where('ticket_id',$ticket->id)
+											->where('approval_id',$atasan['id'])
+											->value('count_approve');
+
 										$t_ap = null;
-                                        if ($ticket_approval->isEmpty()) {
+										if($jml_approver_tertentu_di_case_journey <= $count_approver_has_approve) {
+											//kalau approver x sudah melalukan approve lebih banyak atau sama dengan yg 
+											//total approver x yg tercatat di case journey 
+											//berarti dianggap sudah approved
+											//kalau sebaliknya, maka dianggap belum approve utk step approver saat ini
+											
+											//get row approval yg paling tepat saat 
+											//approver tsb melakukan approve
+											//agar tanggalny sesuai
                                             $t_ap = DB::table('ticket_approval')
-                                            ->where('ticket_id',$ticket->id)
-                                            ->where('approval_id',$atasan['id'])
-                                            ->first();
-                                        }
-                                        if (empty($ticket_approval[$cek_multiple]) && $cek_multiple == 1 && !empty($ticket_approval[0])) {
-                                            $ticket_approval[$cek_multiple] = $ticket_approval[0];
-                                            $ticket_approval[$cek_multiple]->status = null;
-                                            $t_ap = $ticket_approval[$cek_multiple];
-                                        }
+												->where('ticket_id',$ticket->id)
+												->where('approval_id',$atasan['id'])
+												->offset($jml_approver_tertentu_di_case_journey - 1)->limit(1) //misal jml ad 2, maka ambil offsetnya 1, karena offset dimulai dari 0 
+												->first();
+										}
+
 										print_approver_case_journey($need_html_output_case_journey,$atasan,$t_ap);
-                                        // dd($ticket_approval);
-									} else {
-										//atasan tidak ditemukan
-										$ticket_approval = null;
+
 									}
 
 								}
