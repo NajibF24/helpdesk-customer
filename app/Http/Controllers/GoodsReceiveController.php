@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Models\Contact;
 use App\Models\GoodsIssue;
 use App\Models\GoodsDetail;
 use App\Models\GoodsIssueLog;
@@ -446,43 +447,13 @@ class GoodsReceiveController extends Controller
             return $row->type_approval == 'approval support custom';
         })->toArray());
 
-        $next_approver = null;
-        foreach($contact_case_journey as $contact) {
-            if(!empty($contact->step_approval)) {
-                //cek kontak tsb adalah approver dan bukan yang melakukan approve saat ini
+        $next_approver = Contact::whereId($ticket->next_approver_id)->first(['id']);
+        $journey = array_values(collect($contact_case_journey)->where('type_approval', 'approval support custom')->toArray());
 
-                $has_approve = DB::table('goods_receive_approvals')
-                                    ->where('goods_receive_id',$ticket->id)
-                                    ->where('approver_id',$contact->id)
-                                    ->first();
-                if ($has_approve) {
-
-                } else {
-                    // dd($contact);
-                    //belum approve
-                    //sudah dapat langsung keluar loop
-                    $next_approver_id = $contact->id;
-                    $next_approver = $contact;
-
-                    if ($contact->id == Auth::user()->person &&
-                        $contact->id == @$contactApprovalSupportCustoms[0]->id && 
-                        $contact->type_approval == 'approval support custom'
-                    ) {
-                        $is_alr_first_support_custom = true;
-                    }
-
-                    break;
-                }
-
-                if ( $contact->id == Auth::user()->person && 
-                    $contact->id == @$contactApprovalSupportCustoms[0]->id && 
-                    $contact->type_approval == 'approval support custom'
-                ) {
-                    $is_alr_first_support_custom = true;
-                }
-            }
+        //jika user approval custom list nya index pertama maka dia adalah orang asset (yg dapat meng assign)
+        if (@$journey[0]->id == Auth::user()->person && ($next_approver && $next_approver->id == Auth::user()->person)) {
+            $is_alr_first_support_custom = true;
         }
-
         // dd($has_approve);
 
         return view($this->module.'.show', compact('detail', 'request_management', 'next_approver', 'is_alr_first_support_custom'));
