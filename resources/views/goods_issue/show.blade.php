@@ -43,7 +43,7 @@ $email = "";
                     <div class="detail-item">
                         <span style="font-weight: 600" class="text-dark-75 text-hover-primary font-size-lg mb-1">Status</span>
                         <p class="text-dark-50 m-0 pt-2 font-weight-normal">
-                        {{ucwords($detail->status)}} 
+                        {{ucwords(str_replace('_', ' ', $detail->status))}} 
                         </p>
                         <br>
                     </div>

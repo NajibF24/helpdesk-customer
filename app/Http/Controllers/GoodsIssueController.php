@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Models\Contact;
 use App\Models\GoodsIssue;
 use App\Models\GoodsDetail;
 use App\Models\GoodsIssueLog;
@@ -400,35 +401,11 @@ class GoodsIssueController extends Controller
         $ticket = DB::table('goods_issues')
                     ->where('id', $input['id'])->first();
         $next_approval_id = 0;
-        $contact_case_journey = getInventoryManagementCaseJourney($detail,"include self","not_include_request_management_notif");
+        $contact_case_journey = getInventoryManagementCaseJourney($detail,"include self","not_include_request_management_notif", "", "need_list_contact_not_unique");
         // dd($contact_case_journey);
         $is_alr_first_support_custom = false;
-        $next_approver = null;
+        $next_approver = Contact::whereId($ticket->next_approver_id)->first(['id']);
         $journey = array_values(collect($contact_case_journey)->where('type_approval', 'approval support custom')->toArray());
-
-        foreach($contact_case_journey as $contact) {
-            //$next_approver_id =
-            if(!empty($contact->step_approval)) {
-                //cek kontak tsb adalah approver dan bukan yang melakukan approve saat ini
-
-                $has_approve = DB::table('goods_issue_approvals')
-                                    ->where('goods_issue_id',$ticket->id)
-                                    ->where('approver_id',$contact->id)
-                                    ->first();
-                if ($has_approve) {
-
-                } else {
-                    // dd($contact);
-                    //belum approve
-                    //sudah dapat langsung keluar loop
-                    $next_approver_id = $contact->id;
-                    $next_approver = $contact;
-                    break;
-                }
-
-            }
-
-        }
 
         //jika user approval custom list nya index pertama maka dia adalah orang asset (yg dapat meng assign)
         if (@$journey[0]->id == Auth::user()->person && ($next_approver && $next_approver->id == Auth::user()->person)) {

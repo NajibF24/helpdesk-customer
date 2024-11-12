@@ -412,50 +412,51 @@ if (! function_exists('print_approver_case_journey')) {
 	function print_approver_case_journey($need_html_output_case_journey,$atasan,$ticket_approval) {
 		if($need_html_output_case_journey == "need_html_output_case_journey") {
 			?>
-			<!--begin::Item-->
-			<div class="timeline-item align-items-start">
-				<!--begin::Label-->
-				<div class="timeline-label font-weight-bolder text-dark-75 font-size-lg"></div>
-				<!--end::Label-->
-				<!--begin::Badge-->
-				<?php
+<!--begin::Item-->
+<div class="timeline-item align-items-start">
+    <!--begin::Label-->
+    <div class="timeline-label font-weight-bolder text-dark-75 font-size-lg"></div>
+    <!--end::Label-->
+    <!--begin::Badge-->
+    <?php
 				if(!empty($ticket_approval->status)) {
 
 					if ($ticket_approval->status == 'rejected') {
 						$has_rejected = true;
 					}
 					?>
-					<div class="timeline-badge">
-						<i class="fa fa-genderless text-<?= App\Helpers\TicketStatusHelper::status_round_color($ticket_approval->status) ?> icon-xl"></i>
-					</div>
-				<?php } else { ?>
-					<div class="timeline-badge">
-						<i class="fa fa-genderless text-danger icon-xl"></i>
-					</div>
-				<?php } ?>
-				<!--end::Badge-->
-				<!--begin::Desc-->
-				<div class="timeline-content font-weight-bolder font-size-lg text-dark-75 pl-3">
-					<?php if(!empty($ticket_approval->status)) {
+    <div class="timeline-badge">
+        <i
+            class="fa fa-genderless text-<?= App\Helpers\TicketStatusHelper::status_round_color($ticket_approval->status) ?> icon-xl"></i>
+    </div>
+    <?php } else { ?>
+    <div class="timeline-badge">
+        <i class="fa fa-genderless text-danger icon-xl"></i>
+    </div>
+    <?php } ?>
+    <!--end::Badge-->
+    <!--begin::Desc-->
+    <div class="timeline-content font-weight-bolder font-size-lg text-dark-75 pl-3">
+        <?php if(!empty($ticket_approval->status)) {
 						echo ucfirst($ticket_approval->status);
 					} else {
 						echo "Wait for Approval";
 					}
 					?>
-				<i class="text-light-50"  <?= popoverJobTitle($atasan['contact_id']) ?> >
-					<?="by " . $atasan['name']?>
-				</i>
+        <i class="text-light-50" <?= popoverJobTitle($atasan['contact_id']) ?>>
+            <?="by " . $atasan['name']?>
+        </i>
 
-				<?php if(!empty($ticket_approval)) { ?>
-					<br><span><?= date('M d, Y H:i', strtotime($ticket_approval->created_at)) ?></span>
-				<?php } else { ?>
-					<br><span></span>
-				<?php } ?>
-				</div>
-				<!--end::Desc-->
-			</div>
-			<!--end::Item-->
-			<?php
+        <?php if(!empty($ticket_approval)) { ?>
+        <br><span><?= date('M d, Y H:i', strtotime($ticket_approval->created_at)) ?></span>
+        <?php } else { ?>
+        <br><span></span>
+        <?php } ?>
+    </div>
+    <!--end::Desc-->
+</div>
+<!--end::Item-->
+<?php
 		}
 	}
 }
@@ -1226,7 +1227,7 @@ if (!function_exists('getContactCaseJourney')) {
 if (!function_exists('getInventoryManagementCaseJourneyReturn')) {
 	//fungsi ini dipakai di approval secara keseluruhan
 	//baik di ApproveRequestController, case_journey_content, submit ServiceCatalog,ProblemCatalog,related tag notif
-	function getInventoryManagementCaseJourneyReturn($detail,$include_self = "",$include_request_management_notif = "include_request_management_notif",$need_html_output_case_journey = ""){
+	function getInventoryManagementCaseJourneyReturn($detail,$include_self = "",$include_request_management_notif = "include_request_management_notif",$need_html_output_case_journey = "", $need_list_contact_not_unique = "need_list_contact_not_unique"){
 
 						$list_contact_case_journey = [];//prepare data untuk notifikasi reply, dan cc di page ini
 						$request_management = DB::table('request_management')->where('id', $detail->request_management_id)->first();
@@ -1726,6 +1727,100 @@ if (!function_exists('getInventoryManagementCaseJourneyReturn')) {
 				$contact_case_journey[$value->id] = $value;
 			}
         }
+
+		$list_contact_not_unique = [];
+		//var_dump($list_contact_case_journey);
+		$list_contact = [];
+		if(!empty($list_contact_case_journey)) {
+			foreach($list_contact_case_journey as $l) {
+				if(!empty($l['id'])) {
+					$contact = DB::table('contact')->select('id','name','email')->where('id',$l['id'])->first();
+				}
+				if(!empty($l['contact_id'])) {
+					$contact = DB::table('contact')->select('id','name','email')->where('id',$l['contact_id'])->first();
+				}
+				if(!empty($contact)) {
+					if($include_self == "include self") {
+						if(!empty($l['step_approval'])) {
+							$contact->step_approval = $l['step_approval'] ?? "";
+							$contact->type_approval = $l['type_approval'] ?? "";
+						}
+						$list_contact[$contact->id] = $contact;
+						$list_contact_not_unique[] = $contact;
+					} else {
+						if(Auth::user()->person != $contact->id) {
+							if(!empty($l['step_approval'])) {
+								$contact->step_approval = $l['step_approval'] ?? "";
+								$contact->type_approval = $l['type_approval'] ?? "";
+							}
+							$list_contact[$contact->id] = $contact;
+							$list_contact_not_unique[] = $contact;
+						}
+					}
+				}
+			}
+		}
+		if($include_request_management_notif == "include_request_management_notif") {
+			if(!empty($request_management->notif)) {
+				$contacts = DB::table('contact')->whereIn('id',explode(",",$request_management->notif))->get()->toArray();
+				foreach($contacts as $contact) {
+					if(!empty($contact)) {
+						if((!empty(Auth::user())) && (Auth::user()->person != $contact->id)) {
+							$list_contact[$contact->id] = $contact;
+						}
+					}
+				}
+			}
+			$contact = DB::table('contact')->select('id','name','email')->where('id',$detail->requestor)->first();
+			if(!empty($contact->id)) {
+				$list_contact[$contact->id] = $contact;
+			}
+		}
+
+		if($need_list_contact_not_unique == "need_list_contact_not_unique"){
+			//list_contact_not_unique menyediakan statusnya juga apakah sudah approve atau belum
+			if(!empty($list_contact_not_unique)) {
+
+				$array_contacts = [];
+				foreach($list_contact_not_unique as $contact) {
+					$array_contacts[] = $contact->id;
+				}
+				//menghitung banyakny contact di casejourney
+				// https://www.php.net/manual/en/function.array-count-values.php
+				$count_contact_in_casejourney = array_count_values($array_contacts);
+
+				//get list approver yang sudah approve
+				$ticket_approved_list = DB::table('goods_receive_approvals')
+						->selectRaw('approver_id')
+						->where('goods_receive_id',$detail->id)
+						->whereIn('approver_id',$array_contacts)
+						// ->groupBy('approval_id')
+						->get();
+				$approver_has_approved_list = [];
+				foreach($ticket_approved_list as $ticket_approved) {
+					$approver_has_approved_list[] = $ticket_approved->approver_id;
+				}
+
+				foreach($list_contact_not_unique as $key => $contact) {
+
+					$index_approver = array_search($contact->id, $approver_has_approved_list);
+					if($index_approver === false) {
+						$has_approved = false;
+					} else {
+						unset($approver_has_approved_list[$index_approver]);
+						$has_approved = true;
+					}
+
+					$list_contact_not_unique[$key]->has_approved = $has_approved;
+				}
+
+			}
+
+			// dd($list_contact_not_unique);
+			return $list_contact_not_unique;
+		}
+
+		
         return $contact_case_journey;
 	}
 }
@@ -1773,8 +1868,8 @@ if (!function_exists('checkReallyLastApprover')) {
 if (!function_exists('getInventoryManagementCaseJourney')) {
 	//fungsi ini dipakai di approval secara keseluruhan
 	//baik di ApproveRequestController, case_journey_content, submit ServiceCatalog,ProblemCatalog,related tag notif
-	function getInventoryManagementCaseJourney($detail,$include_self = "",$include_request_management_notif = "include_request_management_notif",$need_html_output_case_journey = ""){
-
+	function getInventoryManagementCaseJourney($detail,$include_self = "",$include_request_management_notif = "include_request_management_notif",$need_html_output_case_journey = "", $need_list_contact_not_unique="need_list_contact_not_unique"){
+				$semua_atasan = [];
 						$list_contact_case_journey = [];//prepare data untuk notifikasi reply, dan cc di page ini
 						$request_management = DB::table('request_management')->where('id', $detail->request_management_id)->first();
 					if(in_array(strtolower($detail->status),[
@@ -1819,6 +1914,7 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 								//2. requester posisinya dari maxusersuperordinate ke atas (ambil 1 atasan saja)
 								//3. ada kesalahan data sehingga tidak ditemukan maxusersuperordinate maka  (ambil 1 atasan saja)
 								$semua_atasan = cekSemuaAtasan($detail->requestor);
+								// dd($semua_atasan);
 								if(!empty($semua_atasan)) {
 
 									$max_user_ditemukan = false;
@@ -1832,10 +1928,12 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 															->where('id', $request_management->max_user_superordinate ?? null)
 															->value('level');
 
+
 										if(!empty($max_user_approval_level) && $max_user_approval_level <= $atasan['position_level']) {
 											$diatas_atau_sama_dgn_max_user_position_level = true;
 										}
 									}
+
 									if($max_user_ditemukan) {
 										//user di bawah maxusersuperordinate
 										foreach($semua_atasan as $atasan) {
@@ -1875,8 +1973,10 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 																->where('id', $request_management->max_user_superordinate ?? null)
 																->value('level');
 
+																// dd(123);
 											if(!empty($max_user_approval_level) && $max_user_approval_level <= $atasan['position_level']) {
 												//UDAH MAKSIMUM
+												// dd(123);
 												break;
 											}
 										}
@@ -2217,6 +2317,7 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 					}
 
 
+		$list_contact_not_unique = [];
 		//var_dump($list_contact_case_journey);
 		$list_contact = [];
 		if(!empty($list_contact_case_journey)) {
@@ -2234,6 +2335,7 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 							$contact->type_approval = $l['type_approval'] ?? "";
 						}
 						$list_contact[$contact->id] = $contact;
+						$list_contact_not_unique[] = $contact;
 					} else {
 						if(Auth::user()->person != $contact->id) {
 							if(!empty($l['step_approval'])) {
@@ -2241,6 +2343,7 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 								$contact->type_approval = $l['type_approval'] ?? "";
 							}
 							$list_contact[$contact->id] = $contact;
+							$list_contact_not_unique[] = $contact;
 						}
 					}
 				}
@@ -2262,6 +2365,51 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 				$list_contact[$contact->id] = $contact;
 			}
 		}
+
+		if($need_list_contact_not_unique == "need_list_contact_not_unique"){
+			//list_contact_not_unique menyediakan statusnya juga apakah sudah approve atau belum
+			if(!empty($list_contact_not_unique)) {
+
+				$array_contacts = [];
+				foreach($list_contact_not_unique as $contact) {
+					$array_contacts[] = $contact->id;
+				}
+				//menghitung banyakny contact di casejourney
+				// https://www.php.net/manual/en/function.array-count-values.php
+				$count_contact_in_casejourney = array_count_values($array_contacts);
+
+				//get list approver yang sudah approve
+				$ticket_approved_list = DB::table('goods_issue_approvals')
+						->selectRaw('approver_id')
+						->where('goods_issue_id',$detail->id)
+						->whereIn('approver_id',$array_contacts)
+						// ->groupBy('approval_id')
+						->get();
+				$approver_has_approved_list = [];
+				foreach($ticket_approved_list as $ticket_approved) {
+					$approver_has_approved_list[] = $ticket_approved->approver_id;
+				}
+
+				foreach($list_contact_not_unique as $key => $contact) {
+
+					$index_approver = array_search($contact->id, $approver_has_approved_list);
+					if($index_approver === false) {
+						$has_approved = false;
+					} else {
+						unset($approver_has_approved_list[$index_approver]);
+						$has_approved = true;
+					}
+
+					$list_contact_not_unique[$key]->has_approved = $has_approved;
+				}
+
+			}
+
+			// dd($list_contact_not_unique);
+			return $list_contact_not_unique;
+		}
+
+		// dd($list_contact);
 
 
 		return $list_contact;

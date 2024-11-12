@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Laracasts\Flash\Flash;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ApproveRequestController extends Controller {
@@ -277,10 +278,13 @@ class ApproveRequestController extends Controller {
 		DB::beginTransaction();
         try {
             if ($type == 'issue') {
-                $contact_case_journey = getInventoryManagementCaseJourney($ticket,"include self","not_include_request_management_notif");
+                $contact_case_journey = getInventoryManagementCaseJourney($ticket,"include self","not_include_request_management_notif","","need_list_contact_not_unique");
             }else{
                 $contact_case_journey = getInventoryManagementCaseJourneyReturn($ticket,"include self","not_include_request_management_notif");
             }
+
+			// dd($contact_case_journey);
+
 			$contactApprovalSupportCustoms = array_values(collect($contact_case_journey)->where('type_approval', 'approval support custom')->toArray());
 
 			if (@$contactApprovalSupportCustoms[0]->id == Auth::user()->person) {
@@ -295,13 +299,9 @@ class ApproveRequestController extends Controller {
 			}
             $is_alr_first_support_custom = false;
 
-			foreach($contact_case_journey as $contact) {
-				//$next_approver_id =
-				$has_approve = DB::table('goods_'.$type.'_approvals')
-									->where('goods_'.$type.'_id',$ticket->id)
-									->where('approver_id',$contact->id)
-									->first();
+			// dd($contact_case_journey);
 
+			foreach($contact_case_journey as $contact) {
 				if(!empty($contact->step_approval)) {
 					if ($contact->id == Auth::user()->person &&
 							$contact->id == @$contactApprovalSupportCustoms[0]->id && 
@@ -309,24 +309,36 @@ class ApproveRequestController extends Controller {
 						) {
 							$is_alr_first_support_custom = true;
 						}
-				}				
+				}		
 
-				if(!empty($contact->step_approval) && $contact->id != Auth::user()->person) {
+				//$next_approval_id =
+				if(!empty($contact->step_approval) && ($contact->id != Auth::user()->person)) {
 					//cek kontak tsb adalah approver dan bukan yang melakukan approve saat ini
-					if ($has_approve) {
+
+					// $has_approve = DB::table('ticket_approval')
+					// 					->where('ticket_id',$ticket->id)
+					// 					->where('approval_id',$contact->id)
+					// 					->first();
+
+					if (!empty($contact->has_approved) && $contact->has_approved) {
 
 					} else {
 						//belum approve
 						//sudah dapat langsung keluar loop
-						
 						$next_approver_id = $contact->id;
-                        $next_approver = $contact;
+
+						// if(Auth::user()->person == $contact_case_journey[count($contact_case_journey) - 1]->id) {
+						// 	$next_approver_id = null;
+						// }
 
 						break;
 					}
-                   
 				}
 			}
+
+			// dd($next_approver_id);
+
+			// dd($next_approver_id);
 			$status = 'Submit for Approval';
 			if(!$next_approver_id) {
 				$status = 'Open';
@@ -364,6 +376,9 @@ class ApproveRequestController extends Controller {
 					'created_by' => Auth::user()->id,
 					'updated_by' => Auth::user()->id,
 				]);
+
+
+				// dd($is_alr_first_support_custom);
 
                 if ($type == 'receive' && $is_alr_first_support_custom) {
                     foreach (explode(',', $request->issue_detail_ids) as $key => $value) {
@@ -592,6 +607,7 @@ class ApproveRequestController extends Controller {
 			DB::commit();
         } catch (Exception $e) {
 			DB::rollBack();
+			Log::error($e->getMessage());
             echo json_encode(["success" => false, 'message' => $e->getMessage().$e->getLine().$e->getFile()]);
             die;
         }
