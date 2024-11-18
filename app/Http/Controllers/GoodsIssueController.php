@@ -540,7 +540,7 @@ class GoodsIssueController extends Controller
     }
 
     public function getMaterialCodeList(Request $request) {
-        $activeInventoryType = InventoryType::firstOrCreate(['title' => 'active'], ['title' => 'active']);
+        $activeInventoryType = InventoryType::firstOrCreate(['title' => 'available'], ['title' => 'available']);
 
         $data = MaterialCode::with(['materialGroup', 'material.storeLocation.warehouse'])->whereHas('material', function ($query) use($activeInventoryType){
             $query->where('qty', '>', 0)->where('inventory_type_id', $activeInventoryType->id)->orWhereNull('inventory_type_id');
@@ -549,7 +549,7 @@ class GoodsIssueController extends Controller
     }
 
     public function getMaterialList(Request $request, $id) {
-        $activeInventoryType = InventoryType::firstOrCreate(['title' => 'active'], ['title' => 'active']);
+        $activeInventoryType = InventoryType::firstOrCreate(['title' => 'available'], ['title' => 'available']);
 
         $data = Material::where('material_code_id', $id)
             ->whereHas('storeLocation', function($q) use($request) {

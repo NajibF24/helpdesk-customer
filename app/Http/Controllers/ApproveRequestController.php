@@ -525,7 +525,7 @@ class ApproveRequestController extends Controller {
                     if ($type == 'issue') {
 						$gi = GoodsIssue::find($ticket->id);
 
-						$inventoryTypeActive = InventoryType::firstOrCreate(['title' => 'active'], ['title' => 'active']);
+						$inventoryTypeActive = InventoryType::firstOrCreate(['title' => 'available'], ['title' => 'available']);
 
 						foreach($materialIds as $materialId) {
 							$mat = Material::where('id', $materialId)->first(['id', 'qty']);
@@ -542,7 +542,7 @@ class ApproveRequestController extends Controller {
                             ->update(['status_return' => GoodsDetail::STATUS_RETURN_ISSUED]);
                         $gi->update(['status' => 'full_approved', 'next_approver_id' => null]);
                     }else{
-						$inventoryType = InventoryType::firstOrCreate(['title' => 'active'], ['title' => 'active']);
+						$inventoryType = InventoryType::firstOrCreate(['title' => 'available'], ['title' => 'available']);
 
 						foreach($materialIds as $materialId) {
 							Material::where('id', $materialId)->increment('qty', 1, ['inventory_type_id' => $inventoryType->id]);
