@@ -336,8 +336,8 @@ $(document).ready(function() {
 																</span>
 															</div>
 													@elseif(!empty($service->image))
-															<div class="overlay-wrapper rounded bg-light text-center " style="height: 170px;">
-																<img style="margin-top: 19%;height:90px;border-radius:5px" class="" src="{{env('GRP_HELPDESK_URL')}}/uploads/{{$service->image}}">
+															<div class="d-flex overlay-wrapper rounded bg-light text-center align-items-center justify-content-center" style="height: 170px;">
+																<img style="height:90px;border-radius:5px" class="" src="{{env('GRP_HELPDESK_URL')}}/uploads/{{$service->image}}">
 															</div>
 													@else
 															<div class="overlay-wrapper rounded bg-light text-center pt-14 pb-14" style="height: 170px;">
