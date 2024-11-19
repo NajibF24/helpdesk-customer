@@ -348,11 +348,13 @@
         const filteredInventoryType = inventoryTypes.find(item => item.id == $(this).val())
         // alert(filteredInventoryType.title);
         if(filteredInventoryType?.title == 'borrow') {
+            $('.material_period').prop('required',true)
             $('.material_period,.material_supplier,.material_amount,.material_pic').removeAttr('disabled')
             $('.material_supplier,.material_amount').prop('disabled', true).val(null)
         } else if(filteredInventoryType?.title == 'deploy') {
             $('.material_period,.material_supplier,.material_amount,.material_pic').removeAttr('disabled')
             $('.material_supplier,.material_period').prop('disabled', true).val(null)
+            $('.material_supplier,.material_period').removeAttr('required')
         } else if(filteredInventoryType?.title == 'in_repair') {
             $('.material_period,.material_supplier,.material_amount,.material_pic').removeAttr('disabled')
             $('.material_pic').prop('disabled', true).val(null).change()
