@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Laracasts\Flash\Flash;
 
 use App\Models\User;
+use DateTime;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -177,12 +178,24 @@ class ApproveRequestController extends Controller {
 	}
 	public function email_approve_inventory(Request $request, $token) {
 		$goods_approval_tokens = DB::table('goods_approval_tokens')->where('token',$token)->first();
+
+		if(empty($goods_approval_tokens)) {
+			echo "invalid token";exit;
+		}
+
         if (empty($request->type)) {
 			echo "empty type";exit;
         }elseif(!in_array($request->type, ['issue', 'receive'])){
 			echo "invalid type";exit;
         }
         $type = $request->type;
+
+		$expiryTime = (new DateTime($goods_approval_tokens->created_at))->modify('+14 days')->format('Y-m-d H:i:s');   // Create a DateTime object
+
+		if(date('Y-m-d H:i:s') > $expiryTime) {
+			echo "token expired, please approve using website portal";exit;
+		}
+
 		if($goods_approval_tokens && $type=='issue') {
 			$user = User::where('person', $goods_approval_tokens->contact_id)->first();
 			if(empty($user)) {
@@ -260,6 +273,11 @@ class ApproveRequestController extends Controller {
 
         $type = $request->type;
 
+		if(!in_array($type, ['receive', 'issue'])) {
+			return json_encode(["success" => false, 'message' => "Invalid trx type."]);
+		}
+
+
 		$ticket = DB::table('goods_'.$type.'s')->where('id',$id)->first();
 		$invType = InventoryType::whereId($ticket->inventory_type_id)->first(['title']);
 
@@ -311,6 +329,7 @@ class ApproveRequestController extends Controller {
 						}
 				}		
 
+
 				//$next_approval_id =
 				if(!empty($contact->step_approval) && ($contact->id != Auth::user()->person)) {
 					//cek kontak tsb adalah approver dan bukan yang melakukan approve saat ini
@@ -336,9 +355,15 @@ class ApproveRequestController extends Controller {
 				}
 			}
 
-			// dd($next_approver_id);
+			if ($type == 'receive' && $is_alr_first_support_custom) {
+				$items = !empty($request->issue_detail_ids) ? explode(',', $request->issue_detail_ids) : [];
 
-			// dd($next_approver_id);
+				if(count($items) == 0) {
+					echo json_encode(["success" => false, 'message' => 'Please select at least one material to approve.']);
+                    die; 
+				}
+			}
+
 			$status = 'Submit for Approval';
 			if(!$next_approver_id) {
 				$status = 'Open';
@@ -470,7 +495,7 @@ class ApproveRequestController extends Controller {
                         $content = "<p>You Get Approval Request with Inventory Number ".$goods_number." </p>
                             <p>Please review this inventory, and approve this inventory to make this inventory assign to Agent.
                             </p>
-                            <a href='".env('MAIL_AGENT_REDIRECT_URL')."/goods_$type/".$ticket->id."' class='btn btn-primary'>Inventory Details</a>
+                           	<a href='".URL('/')."/email_approve_inventory/".$token_email_approve."?type=". $type ."' class='btn btn-primary'>Approve/Reject Ticket</a>
                             <p>You can reject this inventory if this inventory is not relevant.</p>";
                         sendNotifEmailInventory($next_approver_id, "You Get Approval Request with Inventory Number ".$goods_number." ", $content,"goods_$type",$id);
 

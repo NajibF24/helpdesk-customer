@@ -357,6 +357,7 @@ class GoodsIssueController extends Controller
             $content = "<p>You Get Approval Request with Inventory Number ".goodsIssueNumber($input['id'])." </p>
                         <p>Please review and approve this request of inventory.
                         </p>
+                        <a href='".URL('/')."/email_approve_inventory/".$token_email_approve."?type=issue' class='btn btn-primary'>Approve/Reject Ticket</a>
                         <p>You can Approve or Reject this inventory if this inventory is not relevant.</p>";
                         // dd($content);
                         // dd([$next_approval_id, "You Get Approval Request with Inventory Number ".goodsIssueNumber($input['id'])." ", $content,"goods_issue",$input['id']]);

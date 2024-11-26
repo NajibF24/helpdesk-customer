@@ -572,18 +572,23 @@ $(".escalate").click(function(e) {
 						}
 					});
 				} else {
+					const type = '{{ $type }}'
+					const url = type == 'issue' ? '{{URL("/")}}/approve-request/{{$inventory->id}}/reject' : '{{URL("/")}}/approve-request/{{$inventory->id}}/reject-goods-receive'
 					KTApp.blockPage({overlayColor: '#000000',state: 'primary',message: 'Processing...'});
 					$.ajax({
 						type: "POST",
-						url: '{{URL("/")}}/approve-request/ticket_reject',
+						url: url,
 						data: "_token={{csrf_token()}}&id={{$inventory->id}}&action_detail=reject&message="+$('.reason-textarea').val(),
 						success: function(data){
 							KTApp.unblockPage();
 
-							var obj = JSON.parse(data);
+							var obj = data
 
 							if(obj.success) {
+								$('.title-desc').html('You have done your action (approve/reject) for this Inventory Transaction. ');
+								$('.reasonModalButton').remove();
 								Swal.fire("Confirmation",obj.message,"success")
+
 								//setTimeout(function() {
 									//location.reload();
 								//},3000);

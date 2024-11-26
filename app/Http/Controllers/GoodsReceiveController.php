@@ -374,6 +374,7 @@ class GoodsReceiveController extends Controller
             $content = "<p>You Get Approval Request with Inventory Number ".goodsReceiveNumber($input['id'])." </p>
                         <p>Please review this inventory, and approve this inventory to make this inventory assign to Agent.
                         </p>
+                        <a href='".URL('/')."/email_approve_inventory/".$token_email_approve."?type=receive' class='btn btn-primary'>Approve/Reject Ticket</a>
                         <p>You can Approve or Reject this inventory if this inventory is not relevant.</p>";
             sendNotifEmailInventory($next_approval_id, "You Get Approval Request with Inventory Number ".goodsReceiveNumber($input['id'])." ", $content,"approve_request",$input['id']);
 
