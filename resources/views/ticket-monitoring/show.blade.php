@@ -737,7 +737,7 @@ function iSummernoteReopen() {
 }
 $(document).ready(function() {
 	iSummernote();
-	console.log("oke");
+	
 	iSummernoteReopen();
 });
 

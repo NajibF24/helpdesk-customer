@@ -188,8 +188,6 @@
                     var obj = JSON.parse(data);
                     
 					for (let i = 0; i < obj.length; i++) {
-						console.log("yyyy");
-						console.log(obj[i]);
 						//text += obj[i] + "<br>";
 						$('.target-{{$data_source}}').append("<option value='"+obj[i].id+"'>"+obj[i].text+"</option>");
 					}
@@ -623,7 +621,6 @@
 													
 													for (let i = 0; i < obj.length; i++) {
 														console.log("yyyy");
-														console.log(obj[i]);
 														//text += obj[i] + "<br>";
 														$('.target-'+data_source).append("<option value='"+obj[i].id+"'>"+obj[i].text+"</option>");
 													}
@@ -720,8 +717,6 @@
 					var obj = JSON.parse(data);
 					
 					for (let i = 0; i < obj.length; i++) {
-						console.log("yyyy");
-						console.log(obj[i]);
 						//text += obj[i] + "<br>";
 						$('.target-asset').append("<option value='"+obj[i].id+"'>"+obj[i].text+"</option>");
 					}
@@ -762,7 +757,7 @@ $('#form_submit').on('submit',(function(e) {
 			var obj = JSON.parse(data);
 			if(obj.success) {
 
-				if(obj.warning) {
+			if(obj.warning) {
 					<?php 
 						//ada warning kemungkinan saat agent on leave 
 						//dari flow grp yang baru
@@ -788,7 +783,9 @@ $('#form_submit').on('submit',(function(e) {
 		error: function(data){
 			console.log("step3");
 			KTApp.unblockPage();
-			Swal.fire("Failed","Sorry, failed to submit ticket","error")
+			const errorMsg = data.responseJSON.message ? `\n ${data.responseJSON.message}` : ''
+			// const inputErrors = 
+			Swal.fire("Failed",`Sorry, failed to submit ticket ${errorMsg}`,"error")
 			console.log("error");
 			console.log(data);
 			

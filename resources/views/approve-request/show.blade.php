@@ -509,7 +509,7 @@ function iSummernote() {
 }
 $(document).ready(function() {
 	iSummernote();
-	console.log("oke");
+	
 });
 
 </script>

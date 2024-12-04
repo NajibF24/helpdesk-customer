@@ -263,26 +263,26 @@ class CrudController extends AppBaseController
 		foreach ($list_column as $c) {
 			$key = $c->getName();
 			if($key == "foto"){
-				$query2 = $query2->editColumn('foto', '<img src="{{url("/")}}/uploads/{{$foto}}" style="height:60px"/>');
+				$query2 = $query2->editColumn('foto', '<img src="{{ url("/") }}/uploads/{{ $foto }}" style="height:60px"/>');
 			}
 			if($key == "icon"){
-				$query2 = $query2->editColumn('icon', '<img src="{{url("/")}}/uploads/{{$icon}}" style="height:60px"/>');
+				$query2 = $query2->editColumn('icon', '<img src="{{ url("/") }}/uploads/{{ $icon }}" style="height:60px"/>');
 			}
 			if($key == "image"){
-				$query2 = $query2->editColumn('image', '<img src="{{url("/")}}/../../uploads/{{$image}}" style="height:60px"/>');
+				$query2 = $query2->editColumn('image', '<img src="{{ url("/") }}/../../uploads/{{ $image }}" style="height:60px"/>');
 			}
 			if($key == "foto_utama"){
-				$query2 = $query2->editColumn('foto_utama', '<img src="{{url("/")}}/uploads/{{$foto_utama}}" style="height:60px"/>');
+				$query2 = $query2->editColumn('foto_utama', '<img src="{{ url("/") }}/uploads/{{ $foto_utama }}" style="height:60px"/>');
 			}
 			if($type == "holiday" && $key == "date") {
-				$query2->editColumn('date', '{{empty($date)?"":date("d M Y",strtotime($date))}}');
+				$query2->editColumn('date', '{{ empty($date)?"":date("d M Y",strtotime($date)) }}');
 			}
 		}
-		$query2 = $query2->editColumn('related_ticket', '{{empty($related_ticket)?"-":$related_ticket}}');
-		$query2 = $query2->editColumn('created_at', '{{empty($created_at)?"":date("d M Y",strtotime($created_at))}}');
-		$query2 = $query2->editColumn('updated_at', '{{empty($updated_at)?"":date("d M Y",strtotime($updated_at))}}');
-		$query2 = $query2->editColumn('created_date', '{{empty($created_date)?"":date("d M Y",strtotime($created_date))}}');
-		$query2 = $query2->editColumn('modified_date', '{{empty($created_date)?"":date("d M Y",strtotime($modified_date))}}');
+		$query2 = $query2->editColumn('related_ticket', '{{ empty($related_ticket)?"-":$related_ticket }}');
+		$query2 = $query2->editColumn('created_at', '{{ empty($created_at)?"":date("d M Y",strtotime($created_at)) }}');
+		$query2 = $query2->editColumn('updated_at', '{{ empty($updated_at)?"":date("d M Y",strtotime($updated_at)) }}');
+		$query2 = $query2->editColumn('created_date', '{{ empty($created_date)?"":date("d M Y",strtotime($created_date)) }}');
+		$query2 = $query2->editColumn('modified_date', '{{ empty($created_date)?"":date("d M Y",strtotime($modified_date)) }}');
 
 		//$query2 = $query2->editColumn('status', 'statusHtml($status)');
 
@@ -632,22 +632,18 @@ class CrudController extends AppBaseController
 
 		$contact = Auth::user()->contact;
 
-		// if(empty($contact->job_title) || empty($contact->organization)){
-		// 	echo json_encode(["success"=>false,"message"=>"You dont have a Job title / Organization"]);
-		// 	die;
-		// }
-		
-		//echo "OKE";die;
 		accessv($type,'create');
 		DB::beginTransaction();
 		try {
-			//echo "OKE";die;
 			$user_id = \Auth::user()->id;
 			$user_name = \Auth::user()->name;
 
 			$input = $request->all();
 
-			//return response()->json(array("success" => false, 'message' => "Record has been saved".var_export($input,true), "data" => "", "id" => 1));
+			$request->validate([
+				'file' => 'required|file|mimes:jpg,jpeg,png,gif,doc,docx,pdf,xls,xlsx,txt,pptx', // Max size in kilobytes (2 MB)
+			]);
+
 			$table = $type;
 			unset($input['client_token']);//kadang2 ikut masuk
 			unset($input['_token']);
@@ -675,13 +671,8 @@ class CrudController extends AppBaseController
 					unset($input[$key]);
 				}
 			}
-			//unset($input['lnk-slt']);
-			//unset($input['lnk-customer_contract']);
 			unset($input['check-all']);
 			unset($input['check_item']);
-
-			//var_dump($input);
-			//die;
 
 			$input_main = $input;
 
@@ -692,12 +683,7 @@ class CrudController extends AppBaseController
 			//cek lokasi dan company
 			//yang cocok di request management
 			$request_management = getRequestManagement($service_id,$contact);
-			//$request_management = DB::table('request_management')
-									//->where('location',$contact->location)
-									//->where('company',$contact->company)
-									//->where('request_name',$service_id)->first();
 
-			//$request_management = DB::table('request_management')->where('id',$input['request_management'])->first();
 			if(empty($request_management)) {
 				echo json_encode(["success"=>false,"message"=>"Sorry, Incident Request Not Avaliable for this Requester"]);
 				die;
@@ -715,39 +701,6 @@ class CrudController extends AppBaseController
 			//$service = DB::table('service')->where('id',$request_management->service)->first();
 			$service_category_id = DB::table('lnkservicetoservice_category')->where('service_id',$service_id)->value('service_category_id');
 
-
-			//ASSIGNMENT
-
-			//$assign_list = explode(",",$request_management->assignment_tier);
-			//$assign_type_list = explode(",",$request_management->assignment_type);
-			//$team_id = $assign_list[0];
-			//$agent_id = null;
-			//if($assign_type_list[0] == 1) {
-				//$agent_id = loadBalance($team_id);
-			//}
-			//else if($assign_type_list[0] == 2) {
-				//$agent_id = roundRobin($team_id);
-			//}
-			//else if($assign_type_list[0] == 3) {
-				//$agent_id = random($team_id);
-			//}
-			//else if($assign_type_list[0] == 4) {
-				//$agent_id = $team_id;//kalau manual maka isi team_id sebetulnya employee id yg terpilih
-				//$team_id = 0;//kosongkan
-
-				//$is_active = filterActiveEmployee($agent_id);
-				//if(!$is_active) {
-					//$agent_id = null;
-				//}
-
-			//}
-
-			//if(empty($agent_id)) {
-				//echo json_encode(["success" => false, 'message' => 'There is no agent that is available for this ticket right now. <b>Please contact Administrator to set Active Agent for this Incident Request. </b>']);
-				//die;
-			//}
-
-			//END ASSIGNMENT
 			$list_filename = array();
 			$list_file_url = [];
 			$file = $request->file('file');
@@ -822,13 +775,7 @@ class CrudController extends AppBaseController
 					'files' => $files,
 					'files_url' => $files_url,
 					'description' => $input_main['description'] ?? '-',
-					//'private_log' => $input_main['private_log'] ?? '-',
 					'finalclass' => $finalclass,
-					//'upload_file' => $input_main['upload_file'] ?? '',
-					//'impact' => $input_main['impact'] ?? '',
-					//'priority' => $input_main['urgency'] ?? '',
-					//'urgency' => $input_main['urgency'] ?? '',
-					//'origin' => $input_main['origin'] ?? '',
 					'service_id' => $service_id ?? 0,
 					'servicesubcategory_id' => $service_category_id ?? 0,
 					'request_management'=>$request_management->id,
@@ -841,9 +788,6 @@ class CrudController extends AppBaseController
 					'updated_by' => Auth::user()->id,
 					'created_at' => date("Y-m-d H:i:s"),
 					'updated_at' => date("Y-m-d H:i:s"),
-					//'team_id' => $team_id,
-					//'agent_id' => $agent_id,
-					// 'assign_time' => date("Y-m-d H:i:s"),
 					'country' => $contact->country ?? 0,
 					'company' => $contact->company ?? 0,
 					'token' => generateRandomString(40),
@@ -851,7 +795,6 @@ class CrudController extends AppBaseController
 					'form_data_json'=>$input_main['form_data_json'] ?? '-',
 					'form_builder_json'=> (empty($form_builder_json)?"":$form_builder_json),
 					'form_builder'=> $form_builder->id ?? null,
-
 					'requester' => $input['request_for'] == "other" ? (int) $input['requester'] : Auth::user()->person,
 					'SLA_status' => 'Active',
 				]
@@ -877,10 +820,7 @@ class CrudController extends AppBaseController
 				//assignment_system menghandle roundrobin, loadbalace, random
 				//dan handling cuti,
 				//hasil returnya bisa 1. dapet agent, 2. pending on leave, atau 3. tidak dapat agent
-				// dd([$ticket, $request_management, $next_agent]);
 				$ret_val = assignment_system($ticket,$request_management,$next_agent,"approval");//submit incident sama flowny dgn approval
-				// var_dump($ret_val);
-				// die;
 				if($ret_val['status'] == 'ok') {
 					$agent_id = $ret_val['agent_id'];
 					$team_id = $ret_val['team_id'];
@@ -909,52 +849,6 @@ class CrudController extends AppBaseController
 
 					echo json_encode(["success" => true, "warning" =>true, "redirect"=>$redirect, 'message' => 'There is no agent that is available for this ticket right now because the agent is On Leave. <b>Please contact Administrator to make this ticket is assigned to available Agent. </b>']);
 					die;
-
-					//berikut flow lama pending leave versi nabati
-
-					// DB::table('ticket')
-					// 	->where('id', $id)
-					// 	->update([
-					// 				'status' =>'Pending On-Leave',
-					// 				'pending_leave_team_id'=>$team_id,
-					// 				'pending_leave_agent_id' => $agent_id,
-					// 				'pending_leave_tier' => $tier,
-					// 			]);
-
-
-					// DB::table('ticket_assignment_log')->insertGetId(
-					// 	[
-					// 		'ticket_id' => $id,
-					// 		'team_id' => -1,
-					// 		'agent_id'=>-1,
-					// 		'created_at' => date("Y-m-d H:i:s"),
-					// 		'updated_at' => date("Y-m-d H:i:s"),
-					// 		'created_by' => -1,
-					// 		'updated_by' => -1,
-					// 		'status'=>'Pending On-Leave',
-					// 		'tier'=>$tier,
-					// 	]
-					// );
-
-					// DB::table('ticket_log')->insertGetId(
-					// 	[
-					// 		'message' => 'Ticket status is Pending On-Leave </a>',
-					// 		'ticket_id' => $id,
-					// 		'created_at' => date("Y-m-d H:i:s"),
-					// 		'created_by' => -1,
-					// 	]
-					// );
-
-					// $content_notif = "<p>Ticket Activity: Status with Ticket Number ".ticketNumber($id)." is Pending On-Leave</p>
-					// 				<p>If you have more problem, you can contact us through available contact</p>";
-					// $title_notif = "Ticket Activity: Status with Ticket Number ".ticketNumber($id)." is Pending on Leave";
-					// notif_to_all_needed_contact($id,$ticket,$title_notif,$content_notif,"ticket_monitoring");
-
-					// $redirect = URL('/').'/myIncidents';
-
-					// echo json_encode(["success" => true,"redirect"=>$redirect, 'message' => "Now the status ticket is Pending On-Leave, because the agent/s is on Leave right now. You need to wait automatic assignment to agent when agent is back to work or you can request Administrator to assign manually. ", ]);
-					// die;
-
 
 				} else {
 					//no agent can handle
@@ -1010,8 +904,6 @@ class CrudController extends AppBaseController
 			$ticket = DB::table('ticket')
 							->where('id', $id)->first();
 
-			// dd($ticket->id, $ticket->assign_time);
-
 			$escalation_time_list = explode(",",$request_management->escalation_time);
 			$escalation_unit_list = explode(",",$request_management->escalation_unit);
 
@@ -1024,16 +916,6 @@ class CrudController extends AppBaseController
 							'current_tier' => $tier,
 							'ticket_open_time'=>$assign_time,//perhitungan awal agent terhadap first response dan time resolved
 							]);
-
-			//awal perhitungan due date diubah jadi saat Start Case
-			// $due_date = checkDueDate($ticket->id,$ticket->assign_time);
-
-			// DB::table('ticket')
-			// 	->where('id', $id)
-			// 	->update(
-			// 		[
-			//          'due_date'=>$due_date,
-			//       ]);
 
 			$next_tier_index = $tier - 1;// tier mulai dari 1, next_tier_index mulai dari 0
 
@@ -1091,12 +973,6 @@ class CrudController extends AppBaseController
 						<p>If you cannot Solve this ticket you can Escalate this ticket</p>";
 			sendNotifEmail($agent_id, $name." Have Assign to New Ticket with Ticket Number ".ticketNumber($id)."", $content_notif,"assign_ticket",$id);
 
-
-			// $content_notif = "<p>Ticket Activity: Request with Ticket Number ".ticketNumber($id)." has been marked as Closed</p>
-			// <p>If you have more problem, you can contact us through available contact</p>";
-			// $title_notif = "Ticket Activity: Request with Ticket Number ".ticketNumber($id)." has been marked as Closed";
-			// notif_to_all_needed_contact($id,$ticket,$title_notif,$content_notif,"ticket_monitoring");
-		
 			$redirect = URL('/').'/myIncidents';
 
 			DB::commit();

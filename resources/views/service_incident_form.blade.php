@@ -249,7 +249,7 @@ function iSummernote2(text) {
 }
 $(document).ready(function() {
 	//iSummernote();
-	console.log("oke");
+	
 	$('.modal-reply').hide();
 	$('.note-modal').hide();
 	$(".close-btn").click(function(e) {

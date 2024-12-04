@@ -170,6 +170,12 @@ class ServiceCatalogController extends Controller {
     {
 		$contact = Auth::user()->contact;
 
+		$request->validate(['file' => [
+			'required',
+			'file',
+			'mimes:jpg,jpeg,png,gif,doc,docx,pdf,xls,xlsx,txt,pptx,csv', 
+		]]);
+
 		if(empty($contact->job_title) || empty($contact->organization)){
 			echo json_encode(["success"=>false,"message"=>"You dont have a Job title / Organization"]);
 			die;
