@@ -641,7 +641,7 @@ class CrudController extends AppBaseController
 			$input = $request->all();
 
 			$request->validate([
-				'file' => 'required|file|mimes:jpg,jpeg,png,gif,doc,docx,pdf,xls,xlsx,txt,pptx', // Max size in kilobytes (2 MB)
+				'file' => 'file|mimes:jpg,jpeg,png,gif,doc,docx,pdf,xls,xlsx,txt,pptx', // Max size in kilobytes (2 MB)
 			]);
 
 			$table = $type;

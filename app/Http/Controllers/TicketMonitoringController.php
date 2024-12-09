@@ -134,8 +134,13 @@ class TicketMonitoringController extends Controller {
 
     public function replyComment(Request $request)
     {
+		
 		DB::beginTransaction();
 		try {
+			$request->validate([
+				'file' => 'file|mimes:jpg,jpeg,png,gif,doc,docx,pdf,xls,xlsx,txt,pptx', // Max size in kilobytes (2 MB)
+			]);
+			
 			$input = $request->all();
 				
 			$ticket = DB::table('ticket')->where('id',$input['id'])->first();
@@ -316,8 +321,8 @@ class TicketMonitoringController extends Controller {
 			echo json_encode(["success" => true, 'message' => "Your message has been sent", 'content'=>$html]);
 		} catch (\Throwable $th) {
 			DB::rollBack();
+			echo json_encode(["success" => false, 'message' => $th->getMessage(), ]);
 
-			dd($th->getMessage());
 		}
     }
 
