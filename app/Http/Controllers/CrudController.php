@@ -987,7 +987,7 @@ class CrudController extends AppBaseController
 
 			DB::rollBack();
 
-			echo json_encode(["success"=>false,"message"=>"error","redirect"=>$redirect]);
+			echo json_encode(["success"=>false,"message"=> $th->getMessage(),"redirect"=>$redirect]);
 			die;
 		}
     }

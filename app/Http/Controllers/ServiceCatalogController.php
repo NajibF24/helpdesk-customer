@@ -420,7 +420,7 @@ class ServiceCatalogController extends Controller {
 			Log::error($th->getMessage(). ' File: ' .$th->getFile(). ' Line: ' .$th->getLine());
 			$redirect = URL('/').'/myServices';
 
-			echo json_encode(["success"=>false,"message"=>"error","redirect"=>$redirect]);
+			echo json_encode(["success"=>false,"message"=>$th->getMessage() ,"redirect"=>$redirect]);
 			die;
 		}
     }
