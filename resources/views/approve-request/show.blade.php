@@ -836,7 +836,10 @@ $(".escalate").click(function(e) {
 					<div class="d-flex align-items-center">
 						<!--begin::Text-->
 						<div class="d-flex flex-column flex-grow-1">
-							<span class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">Reason</span>
+							<span class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">
+								Reason
+								<span class="text-danger required-reason">*</span>
+							</span>
 						</div>
 						<!--end::Text-->
 					</div>

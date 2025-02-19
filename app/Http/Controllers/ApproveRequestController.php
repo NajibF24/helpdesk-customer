@@ -234,8 +234,6 @@ class ApproveRequestController extends Controller {
             $breadcumb = ['Approve Request', $inventory->subject];
             $inventory_statuses = DB::table('goods_receive_approvals')->where('goods_receive_id', $id)->get();
 
-            //echo $approval_id;
-            //var_dump($next_is_assignment);
             return view('approve-request.show_email_approve_inventory')
                 ->with('inventory', $inventory)
                 ->with('title', $title)
@@ -258,17 +256,10 @@ class ApproveRequestController extends Controller {
 
     public function ticketActionInventory(Request $request) {
         $input = $request->all();
-		// dd($input);
 		$id = $request['id'];
-        // dd(explode(',', $request->issue_detail_ids));
-        // dd($request->all());
 
-		$validation = Validator::make($input, [
-			'message' => 'required'
-		]);
-
-		if($validation->fails()) {
-			return json_encode(["success" => false, 'message' => "Please insert the reason."]);
+		if(!validateEditorContent($input['message'])) {
+			return json_encode(["success" => false, 'message' => "Please insert the reason with minimum of 10 characters."]);
 		}
 
         $type = $request->type;
@@ -282,17 +273,12 @@ class ApproveRequestController extends Controller {
 		$invType = InventoryType::whereId($ticket->inventory_type_id)->first(['title']);
 
 		if($ticket->next_approver_id != Auth::user()->person) {
-            // dd([$ticket, Auth::user()->person]);
 			echo json_encode(["success" => false, 'message' => "You don't need to approve this ticket, because you are not next approver for this ticket. Please contact Admin you have more problem."]);
 			die;
 		}
 
-        //$next_approval_state = "";
 		$next_is_assignment = 0;
-		//$dapet = false;
 		$next_approver_id = "";
-		//$transisi_dari_approval_user_ke_support = false;
-		$request_management = DB::table('request_management')->where('id', $ticket->request_management_id)->first();
 		DB::beginTransaction();
         try {
             if ($type == 'issue') {
@@ -300,8 +286,6 @@ class ApproveRequestController extends Controller {
             }else{
                 $contact_case_journey = getInventoryManagementCaseJourneyReturn($ticket,"include self","not_include_request_management_notif");
             }
-
-			// dd($contact_case_journey);
 
 			$contactApprovalSupportCustoms = array_values(collect($contact_case_journey)->where('type_approval', 'approval support custom')->toArray());
 
@@ -316,8 +300,6 @@ class ApproveRequestController extends Controller {
                 }
 			}
             $is_alr_first_support_custom = false;
-
-			// dd($contact_case_journey);
 
 			foreach($contact_case_journey as $contact) {
 				if(!empty($contact->step_approval)) {
@@ -370,11 +352,6 @@ class ApproveRequestController extends Controller {
 				$next_is_assignment = true;
 			}
 
-			//var_dump($next_approver_id);
-			//var_dump($status);
-			//var_dump("nextisassignment".$next_is_assignment);
-			//die;
-
 			if ($id) {
 
 				DB::table('goods_'.$type.'_approvals')->insertGetId(
@@ -402,8 +379,6 @@ class ApproveRequestController extends Controller {
 					'updated_by' => Auth::user()->id,
 				]);
 
-
-				// dd($is_alr_first_support_custom);
 
                 if ($type == 'receive' && $is_alr_first_support_custom) {
                     foreach (explode(',', $request->issue_detail_ids) as $key => $value) {
@@ -472,7 +447,6 @@ class ApproveRequestController extends Controller {
 					DB::table('goods_approval_tokens')->insertGetId($gat);
 
                     if ($is_alr_first_support_custom) {
-                        // dd($next_approver_id);
                         $content = "<p>You Get Assign Request with Inventory Number ".$goods_number." </p>
                             <p>Please review this inventory, and assign this inventory to proceed.
                             </p>
@@ -516,8 +490,6 @@ class ApproveRequestController extends Controller {
 						[
 							'message' => 'Ticket has been approved by <a href="#">'.Auth::user()->name.'</a>',
 							'goods_'.$type.'_id' => $id,
-							// 'created_at' => date("Y-m-d H:i:s"),
-							// 'created_by' => Auth::user()->id,
 						]
 					);
                     // dd($request->all());
@@ -650,6 +622,10 @@ class ApproveRequestController extends Controller {
 		if($ticket->next_approval_id != Auth::user()->person) {
 			echo json_encode(["success" => false, 'message' => "You don't need to approve this ticket, because you are not next approver for this ticket. Please contact Admin you have more problem."]);
 			die;
+		}
+
+		if(!validateEditorContent($input['message'])) {
+			return json_encode(["success" => false, 'message' => "Please insert the reason with minimum of 10 characters."]);
 		}
 
         //$next_approval_state = "";

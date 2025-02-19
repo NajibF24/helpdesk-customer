@@ -5993,10 +5993,33 @@ if (!function_exists('notif_to_all_needed_contact_inventory')) {
 
 	}
 
-	function removeSpecialCharacters($input) {
-        $pattern = '/[^a-zA-Z0-9 .]/';
-        $result = preg_replace($pattern, '', $input);
 
-		return $result;
+	if(!function_exists('removeSpecialCharacters')) {
+		function removeSpecialCharacters($input) {
+			$pattern = '/[^a-zA-Z0-9 .]/';
+			$result = preg_replace($pattern, '', $input);
+
+			return $result;
+		}
+	}
+
+	if(!function_exists('validateEditorContent')) {
+		function validateEditorContent($content, int $minLength = 10): bool
+		{
+			if(!$content) return false;
+			 $plainText = html_entity_decode(strip_tags($content));
+
+			 $plainText = str_replace("\xc2\xa0", ' ', $plainText); 
+		 
+			 if (preg_match('/^(?:\s|\xc2\xa0){10,}/u', $plainText)) {
+				 return false;
+			 }
+		 
+			 // Remove all spaces (regular and non-breaking) to count only meaningful characters
+			 $textWithoutSpaces = preg_replace('/[\s\xc2\xa0]+/u', '', $plainText);
+		 
+			 // Validate the length of the meaningful text (excluding spaces)
+			 return mb_strlen($textWithoutSpaces) >= $minLength;
+		}
 	}
 }

@@ -521,46 +521,12 @@ $hours = explode(", ", $coverage->coverage_hours);
 									tags: false,
 											//multiple: true,
 											tokenSeparators: [',', ' '],
-											//minimumInputLength: 2,
-											//minimumResultsForSearch: 10,
-											//ajax: {
-												//url: '{{URL("/")}}/select2list/'+data_target,
-												//dataType: "json",
-												//type: "GET",
-												//data: function (params) {
-
-													//var queryParameters = {
-														//term: params.term
-													//}
-													//return queryParameters;
-												//},
-												//processResults: function (data) {
-
-													//console.log(data);
-													//return {
-														//results: $.map(data, function (item) {
-															//return {
-																//text: item.text,
-																//id: item.id
-															//}
-														//})
-													//};
-												//}
-											//}
-
 									});
-
-
-
-
-
 									});
 									</script>
 
 								<span class="form-text text-muted">All people inputed here will get notified for this ticket.</span>
 							</div>
-
-
 						</div>
 					</div>
 				</div>
