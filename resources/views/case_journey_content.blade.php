@@ -128,10 +128,10 @@ use Illuminate\Support\Facades\Auth;
 											if($log->agent_id == -1 || $log->agent_id == -3) {
 												echo "System";
 											} else {
-												echo $agent->name ?? "";
+												echo e($agent->name) ?? "";
 											}
 											if(!empty($team->name)) {
-												echo " (".$team->name.")";
+												echo " (".e($team->name).")";
 											}
 											?>
 										</i>

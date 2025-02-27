@@ -10,7 +10,7 @@
 		<div class="card-header border-0 py-5">
 			<h3 class="card-title align-items-start flex-column mb-0 mt-2">
 				<span class="card-label font-weight-bolder text-dark">Activity Stream</span>
-				
+
 			</h3>
 			<div class="card-toolbar">
 
@@ -23,9 +23,9 @@
 					<div class="content-activities example example-basic mt-5">
 						<div class="example-preview">
 							<!--begin::Timeline-->
-							
-								<?php 
-								
+
+								<?php
+
 								$ticket_log = DB::table('ticket_log')
 													->where('created_by',Auth::user()->id)
 													->orderBy('created_at','desc')
@@ -38,7 +38,7 @@
 								@else
 									<div class="timeline timeline-6 mt-3">
 										@foreach($ticket_log as $t)
-										<?php 
+										<?php
 										$i++;
 										?>
 										<!--begin::Item-->
@@ -52,14 +52,14 @@
 											</div>
 											<!--end::Badge-->
 											<!--begin::Text-->
-											<div class="font-weight-mormal font-size-lg timeline-content text-muted pl-3"><?=str_replace("Ticket", "Ticket ".ticketNumber($t->ticket_id)." ", $t->message)?></div>
+											<div class="font-weight-mormal font-size-lg timeline-content text-muted pl-3">{!!sanitize(str_replace("Ticket", "Ticket ".ticketNumber($t->ticket_id)." ", $t->message))!!}</div>
 											<!--end::Text-->
 										</div>
 										<!--end::Item-->
 										@endforeach
 									</div>
 									<!--end::Timeline-->
-									
+
 								@endif
 
 						</div>

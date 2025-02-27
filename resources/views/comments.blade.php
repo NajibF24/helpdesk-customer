@@ -14,19 +14,19 @@
     display: block;
 }
 </style>
-<?php 
+<?php
 $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticket->id)->get();
 
 ?>
-@foreach($comments as $c) 
-	<?php 
+@foreach($comments as $c)
+	<?php
 	$contact = DB::table('contact')->where('id',$c->contact_id)->first();
 	$job_name = "";
 	if(!empty($contact->job_title)) {
 		$job_name = DB::table('job_title')->where('id',$contact->job_title)->value('job_name');
 	}
 	?>
-	@if($c->user_id == Auth::user()->id) 
+	@if($c->user_id == Auth::user()->id)
 
 		<div class="card card-custom gutter-b "		>
 			<div class="card-body">
@@ -101,7 +101,7 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 						<div class="d-flex align-items-center flex-wrap justify-content-between">
 							<!--begin::Description-->
 							<div class="flex-grow-1 font-weight-bold text-dark-50 py-2 py-lg-2 mr-5">
-								<?=$c->message?>
+								{!!sanitize($c->message)!!}
 							</div>
 							<!--end::Description-->
 						</div>
@@ -110,9 +110,9 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 					<!--end::Info-->
 				</div>
 				<!--end::Top-->
-				
-				
-				
+
+
+
 				@if(!empty($c->files))
 					<!--begin::Separator-->
 					<div class="separator separator-solid my-7"></div>
@@ -120,13 +120,13 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 					<div class="d-flex flex-column mb-5 align-items-start">Attachments</div>
 					<div class="d-flex flex-column mb-5 align-items-start">
 						<div>
-						
+
 							<?php $files = explode(",",$c->files_url);
 							?>
 								@foreach($files as $f)
 									@if(is_image($f))
 									@else
-										<?php 
+										<?php
 										$a = explode("/",$f);
 										$t = substr($a[count($a)-1],6);
 										?>
@@ -155,7 +155,7 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 		<div class="d-flex flex-column mb-5 align-items-end">
 			<div class="d-flex align-items-center">
 				<div>
-					
+
 					<a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-h6" style="display:block">You</a>
 					<span class="text-muted font-size-sm">{{date('d M Y H:i', strtotime($c->created_at))}}</span>
 				</div>
@@ -163,25 +163,25 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 					<img alt="Pic" src="{{URL('/')}}/assets/media/users/default.jpg">
 				</div>
 			</div>
-			<div class="mt-2 rounded p-3 bg-light-primary text-dark-50 font-weight-bold font-size-lg text-right max-w-400px"><?=$c->message?>
+			<div class="mt-2 rounded p-3 bg-light-primary text-dark-50 font-weight-bold font-size-lg text-right max-w-400px">{!!sanitize($c->message)!!}
 
 
-				
+
 			</div>
 
-			
+
 		</div>
 		@if(!empty($c->files))
 			<div class="d-flex flex-column mb-5 align-items-end">Attachments</div>
 			<div class="d-flex flex-column mb-5 align-items-end">
 				<div>
-				
+
 					<?php $files = explode(",",$c->files_url);
 					?>
 						@foreach($files as $f)
 							@if(is_image($f))
 							@else
-								<?php 
+								<?php
 								$a = explode("/",$f);
 								$t = substr($a[count($a)-1],6);
 								?>
@@ -279,7 +279,7 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 						<div class="d-flex align-items-center flex-wrap justify-content-between">
 							<!--begin::Description-->
 							<div class="flex-grow-1 font-weight-bold text-dark-50 py-2 py-lg-2 mr-5">
-								<?=$c->message?>
+								{!!sanitize($c->message)!!}
 							</div>
 							<!--end::Description-->
 						</div>
@@ -296,13 +296,13 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 					<div class="d-flex flex-column mb-5 align-items-start">Attachments</div>
 					<div class="d-flex flex-column mb-5 align-items-start">
 						<div>
-						
+
 							<?php $files = explode(",",$c->files_url);
 							?>
 								@foreach($files as $f)
 									@if(is_image($f))
 									@else
-										<?php 
+										<?php
 										$a = explode("/",$f);
 										$t = substr($a[count($a)-1],6);
 										?>
@@ -325,7 +325,7 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 				@endif
 			</div>
 		</div>
-		
+
 		<div class="d-none">
 		<!--begin::Message In-->
 		<div class="d-flex flex-column mb-5 align-items-start">
@@ -334,14 +334,14 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 					<img alt="Pic" src="{{URL('/')}}/assets/media/users/default.jpg">
 				</div>
 				<div>
-					<?php 
+					<?php
 					$contact = DB::table('contact')->where('id',$c->contact_id)->first();
 					?>
 					<a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-h6"  style="display:block">{{$contact->name ?? ""}}</a>
 					<span class="text-muted font-size-sm">{{date('d M Y H:i', strtotime($c->created_at))}}</span>
 				</div>
 			</div>
-			<div class="mt-2 rounded p-3 bg-light-success text-dark-50 font-weight-bold font-size-lg text-left max-w-400px"><?=$c->message?>
+			<div class="mt-2 rounded p-3 bg-light-success text-dark-50 font-weight-bold font-size-lg text-left max-w-400px">{!!sanitize($c->message)!!}
 			</div>
 		</div>
 		<!--end::Message In-->
@@ -349,13 +349,13 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 			<div class="d-flex flex-column mb-5 align-items-start">Attachments</div>
 			<div class="d-flex flex-column mb-5 align-items-start">
 				<div>
-				
+
 					<?php $files = explode(",",$c->files_url);
 					?>
 						@foreach($files as $f)
 							@if(is_image($f))
 							@else
-								<?php 
+								<?php
 								$a = explode("/",$f);
 								$t = substr($a[count($a)-1],6);
 								?>

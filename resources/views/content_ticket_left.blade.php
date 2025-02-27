@@ -1,12 +1,12 @@
-            <?php 
-            
+            <?php
+
             //$ticket->assign_time = "2021-05-21 17:30:00";
             //echo $ticket->assign_time;
             //echo checkDueDate($ticket->id,$ticket->assign_time);
             //echo checkEscalationDate($ticket->id,$ticket->assign_time,5,"Hours");
-            
+
             ?>
-            
+
             <!--begin::List Widget 8-->
 			<div class="card card-custom gutter-b">
 				<div class="card-body">
@@ -31,8 +31,8 @@
 
 
 										{{ $name }}
-										
-										
+
+
 									<i class="flaticon2-correct text-success icon-md ml-2"></i></span>
 									<!--end::Name-->
 									@if ($ticket->status == "Closed" && $ticket->rating)
@@ -51,7 +51,7 @@
 									@endif
 									<!--begin::Contacts-->
 									<div class="d-flex flex-wrap my-2">
-										
+
 										<span class="text-muted text-hover-primary font-weight-bold mr-lg-8 mr-5 mb-lg-0 mb-2">
 										<span class="flaticon2-chronometer icon-md icon-gray-500 mr-1"></span>
 										{{date('d M Y H:i', strtotime($ticket->created_at))}}</span>
@@ -98,18 +98,18 @@
 								<!--begin::Description-->
 								<div class="flex-grow-1  text-dark-75 py-2 py-lg-2 mr-5">
 									Hi, team <br/><br/>
-								<?= $ticket->description ?>	
+								<?= $ticket->description ?>
 									<br/><br/>
 									Regards,<br/>
 									{{ $name }}
 								</div>
 								<!--end::Description-->
-								
-								
 
-								
-								
-								
+
+
+
+
+
 							</div>
 							<!--end::Content-->
 
@@ -134,9 +134,9 @@
 								<!--begin::Description-->
 								<div class="flex-grow-1  text-dark-75 py-2 py-lg-2 mr-5">
 									<div class="d-none1">Hi, team <br/></div>
-								<?= $ticket->description ?>	
+								<?= $ticket->description ?>
 									<div class="d-none1">
-									
+
 									Regards,<br/>
 									{{ $name }}
 									</div>
@@ -145,13 +145,13 @@
 								<!--end::Desc-->
 							</div>
 							<!--end::Item-->
-							<?php 
+							<?php
 							//var_dump($ticket->form_builder_json);
 							//echo "<pre>";
 							$form_builder = json_decode($ticket->form_builder_json);
 							//var_dump($form_builder);
 							//echo "<br/><br/>";
-							
+
 							$data_json = json_decode($ticket->data_json);
 							//var_dump($data_json);
 							//echo "</pre>";
@@ -177,7 +177,7 @@
 											<table class="table table-bordered table-striped">
 												<thead>
 													<tr>
-														<?php 
+														<?php
 														$headers = explode("#*#",$f->header);
 														?>
 														@foreach($headers as $h)
@@ -188,17 +188,17 @@
 													</tr>
 												</thead>
 												<tbody>
-													<?php 
+													<?php
 													for($r=0;$r<$f->rows;$r++) {
 													?>
 													<tr>
 														<?php $k = 0;
-														foreach($headers as $h) {														
-															
+														foreach($headers as $h) {
+
 															$target_key = "input_".$f->name."_".$k."_".$r;
 															?>
 															<td>
-																<?php 
+																<?php
 																foreach($data_json as $key=>$value) {
 																	if($key == $target_key) {
 																		//control selain checkbox
@@ -212,22 +212,22 @@
 																}
 																?>
 															</td>
-														<?php 
+														<?php
 														$k++;
 														} ?>
-														
+
 													</tr>
-													<?php 
+													<?php
 													} ?>
 												</tbody>
 											</table>
-											<?php 
-											
+											<?php
+
 											?>
 											<!--end::Desc-->
 										</div>
-										<!--end::Item-->	
-										<?php 
+										<!--end::Item-->
+										<?php
 										}
 									} else {
 										?>
@@ -243,7 +243,7 @@
 											</div>
 											<!--end::Section-->
 											<!--begin::Desc-->
-											<?php 
+											<?php
 											foreach($data_json as $key=>$value) {
 												//echo $key;
 												$a = explode("_",$key); //misal : location-1617930142092_location_Address
@@ -251,8 +251,8 @@
 													if($a[0] == $f->name) {
 														//echo "SAMA";
 														//var_dump($value);
-														//echo $f->type;									
-														
+														//echo $f->type;
+
 														$retval =  getObjectValue($f->type,$value);
 														if(is_array($retval)) {
 															echo "<ul>";
@@ -267,7 +267,7 @@
 																echo $retval;
 															}
 														}
-													
+
 													}
 												}
 											}
@@ -275,8 +275,8 @@
 											<p class="text-dark-50 m-0 pt-5 font-weight-normal">{{ "" }}</p>
 											<!--end::Desc-->
 										</div>
-										<!--end::Item-->	
-										<?php 
+										<!--end::Item-->
+										<?php
 									}
 								}
 							}
@@ -295,7 +295,7 @@
 								</div>
 								<!--end::Section-->
 								<!--begin::Desc-->
-								
+
 								<div class="d-flex flex-column mb-5 align-items-start">
 									<div>
 									<?php $files = explode(",",$ticket->files_url);
@@ -303,7 +303,7 @@
 									@foreach($files as $f)
 										@if(is_image($f))
 										@else
-											<?php 
+											<?php
 											$a = explode("/",$f);
 											$t = substr($a[count($a)-1],6);
 											?>
@@ -333,19 +333,19 @@
 					<!--begin::Separator-->
 					<div class="separator separator-solid mt-7"></div>
 					<!--end::Separator-->
-					
+
 					&nbsp;<button class="btn btn-sm btn-white-line2 mt-7" onclick="window.location.assign('{{URL('/')}}/ticket-monitoring')"><i class="flaticon2-left-arrow icon-sm text-dark-75"></i> Back</button>
-					
-					@if($ticket->status == "Resolved" && $ticket->created_by == Auth::user()->id) 
+
+					@if($ticket->status == "Resolved" && $ticket->created_by == Auth::user()->id)
 						&nbsp;<button class="btn btn-sm btn-white-line2 rating-closed mt-7"  data-action="close-ticket"><i class="flaticon2-check-mark  icon-sm text-dark-75"></i> Close Ticket</button>
 					@endif
-					
-					@if($ticket->status == "Resolved" && $ticket->created_by == Auth::user()->id) 
+
+					@if($ticket->status == "Resolved" && $ticket->created_by == Auth::user()->id)
 						<button class="btn btn-sm btn-white-line2 reopen mt-7"  data-action="reopen-ticket"><i class="flaticon2-check-mark  icon-sm text-dark-75"></i> Reopen Ticket</button>
 					@endif
 
-					@if($ticket->agent_id == Auth::user()->person) 
-						@if(in_array($ticket->status, ["Open"]))	
+					@if($ticket->agent_id == Auth::user()->person)
+						@if(in_array($ticket->status, ["Open"]))
 							<button class="btn btn-sm btn-white-line2 on_progress mt-7"  data-action="on_progress"><i class="flaticon2-check-mark  icon-sm text-dark-75"></i> Start Case</button>
 						@endif
 						@if(in_array($ticket->status, ["Open","On Progress","Re-Open"]))
@@ -356,7 +356,7 @@
 						@endif
 						&nbsp;
 					@endif
-					
+
 					@if ($ticket->next_approval_id == Auth::user()->person && $ticket->status != 'Withdrawn')
 						&nbsp;
 						<button class="btn btn-sm btn-white-line2  mt-7 reasonModalButton reason-modal" data-id="{{ $ticket->id }}" data-title="{{ $ticket->title }}" data-status-ticket="Approve">Approve</button>
@@ -368,30 +368,30 @@
 						@endif
 					@endif
 					<!--end::Form-->
-					
+
 					&nbsp;
 					<button  class="mb-0 btn btn-sm btn-white-line2  mt-7 reply-comment"  data-toggle="modal" data-target="#exampleModal" style=""><i class="flaticon2-reply-1 icon-sm text-dark-75"></i> Reply</button>
-					
+
 					<button  class="mb-0 btn btn-sm btn-white-line2  mt-7 activities"  ><i class="flaticon2-time icon-sm text-dark-75"></i> Activities</button>
-					
+
 					<!-- Delete Ticket -->
 					@if ($ticket->created_by == Auth::user()->id && $ticket->status == "Submit for Approval" && DB::table('ticket_approval')->where('ticket_id', $ticket->id)->count() == 0)
 					&nbsp;
 					<button class="mb-0 btn btn-sm btn-white-line2 mt-7 reasonModalButton reason-modal" data-id="{{ $ticket->id }}" data-title="{{ $ticket->title }}" data-status-ticket="Delete"><i class="flaticon2-trash icon-sm text-dark-75"></i> Withdrawn</button>
 					@endif
-					
+
 					<!--begin::Example-->
 					<div class="content-activities example example-basic mt-5" style="display:none">
 						<div class="example-preview">
 							<!--begin::Timeline-->
 							<div class="timeline timeline-6 mt-3">
-								<?php 
+								<?php
 								$ticket_log = DB::table('ticket_log')->where('ticket_id',$ticket->id)->get();
 								$color3 = ['primary','danger','warning','info','default'];
 								$i = 0;
 								?>
 								@foreach($ticket_log as $t)
-								<?php 
+								<?php
 								$i++;
 								?>
 								<!--begin::Item-->
@@ -405,7 +405,7 @@
 									</div>
 									<!--end::Badge-->
 									<!--begin::Text-->
-									<div class="font-weight-mormal font-size-lg timeline-content text-muted pl-3"><?=$t->message?></div>
+									<div class="font-weight-mormal font-size-lg timeline-content text-muted pl-3">{!!sanitize($t->message)!!}</div>
 									<!--end::Text-->
 								</div>
 								<!--end::Item-->
@@ -416,8 +416,8 @@
 					</div>
 					<!--end::Example-->
 
-					
-					
+
+
 					<div class="card mt-5" style="border-radius:4px;">
 						<div class="card-body p-4">
 							<div class="row">
@@ -440,7 +440,7 @@
 								  <b class="text-info">Urgency</b><br/>
 								  {{$ticket->urgency}}
 								</div>
-							</div>									  
+							</div>
 						</div>
 					</div>
 
@@ -452,7 +452,7 @@
 								  <b class="text-info">Rating Message</b><br/>
 								  <p>{{$ticket->comment ?? '-'}}</p>
 								</div>
-							</div>									  
+							</div>
 						</div>
 					</div>
 					@endif

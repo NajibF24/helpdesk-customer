@@ -1330,7 +1330,7 @@ $(document).ready(function(){
 												</div>
 												<!--end::Badge-->
 												<!--begin::Text-->
-												<div class="font-weight-mormal font-size-lg timeline-content text-muted pl-3"><?=str_replace("Ticket", "Ticket ".ticketNumber($t->ticket_id)." ", $t->message)?></div>
+												<div class="font-weight-mormal font-size-lg timeline-content text-muted pl-3"><?=sanitize(str_replace("Ticket", "Ticket ".ticketNumber($t->ticket_id)." ", $t->message))?></div>
 												<!--end::Text-->
 											</div>
 											<!--end::Item-->
@@ -1399,8 +1399,8 @@ $(document).ready(function(){
 </div>
 
 <script>
-		
-		
+
+
 		$(document).ready(function() {
 			function initDatatable() {
 				const datatable = $('#main-table').DataTable({
@@ -1431,7 +1431,7 @@ $(document).ready(function(){
 				} );
 			}
 
-			
+
 
 			$('#material-filter').change(function() {
 				initDatatable()

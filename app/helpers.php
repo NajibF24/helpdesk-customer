@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Smalot\PdfParser\Parser;
 
 // ======================== START CUSTOMIZING FUNCTION HELPERS ====================
 //START : untuk Report
@@ -444,7 +445,7 @@ if (! function_exists('print_approver_case_journey')) {
 					}
 					?>
         <i class="text-light-50" <?= popoverJobTitle($atasan['contact_id']) ?>>
-            <?="by " . $atasan['name']?>
+            <?="by " . sanitize($atasan['name'])?>
         </i>
 
         <?php if(!empty($ticket_approval)) { ?>
@@ -556,7 +557,7 @@ if (!function_exists('getContactCaseJourney')) {
 											//var_dump($atasan);
 											//echo "SSS";
 											// check dulu jika position_id atasan lebih dari max_user_superordinate maka ambil 1 atasan saja untuk kebutuhan approval
-											
+
 											// if($atasan['position_id'] > $request_management->max_user_superordinate) {
 											// }else{
 											// }
@@ -584,13 +585,13 @@ if (!function_exists('getContactCaseJourney')) {
 										//atau kondisinya tidak ditemukan maxusersuperordinate
 										foreach($semua_atasan as $atasan) {
 											if($atasan['position_id'] > $request_management->max_user_superordinate) {
-												
+
 											}else{
 												$ticket_approval = DB::table('ticket_approval')
 																	->where('ticket_id',$ticket->id)
 																	->where('approval_id',$atasan['contact_id'])
 																	->first();
-	
+
 												$atasan['step_approval'] = "approval user";
 												$atasan['type_approval'] = "max user superordinate";
 												$list_contact_case_journey[] = $atasan;
@@ -1074,18 +1075,18 @@ if (!function_exists('getContactCaseJourney')) {
 
 										$t_ap = null;
 										if($jml_approver_tertentu_di_case_journey <= $count_approver_has_approve) {
-											//kalau approver x sudah melalukan approve lebih banyak atau sama dengan yg 
-											//total approver x yg tercatat di case journey 
+											//kalau approver x sudah melalukan approve lebih banyak atau sama dengan yg
+											//total approver x yg tercatat di case journey
 											//berarti dianggap sudah approved
 											//kalau sebaliknya, maka dianggap belum approve utk step approver saat ini
-											
-											//get row approval yg paling tepat saat 
+
+											//get row approval yg paling tepat saat
 											//approver tsb melakukan approve
 											//agar tanggalny sesuai
                                             $t_ap = DB::table('ticket_approval')
 												->where('ticket_id',$ticket->id)
 												->where('approval_id',$atasan['id'])
-												->offset($jml_approver_tertentu_di_case_journey - 1)->limit(1) //misal jml ad 2, maka ambil offsetnya 1, karena offset dimulai dari 0 
+												->offset($jml_approver_tertentu_di_case_journey - 1)->limit(1) //misal jml ad 2, maka ambil offsetnya 1, karena offset dimulai dari 0
 												->first();
 										}
 
@@ -1820,7 +1821,7 @@ if (!function_exists('getInventoryManagementCaseJourneyReturn')) {
 			return $list_contact_not_unique;
 		}
 
-		
+
         return $contact_case_journey;
 	}
 }
@@ -5660,50 +5661,14 @@ if ( ! function_exists('is_image'))
 
 if ( ! function_exists('handleUpload'))
 {
-	function handleUpload($file,$filename="",$path="/uploads") {
-
-
-		// menyimpan data file yang diupload ke variabel $file
-//		$file = $request->file('file');
-
-      	        // nama file
-		//echo 'File Name: '.$file->getClientOriginalName();
-		//echo '<br>';
-
-      	        // ekstensi file
-		//echo 'File Extension: '.$file->getClientOriginalExtension();
-		//echo '<br>';
-
-      	        // real path
-		//echo 'File Real Path: '.$file->getRealPath();
-		//echo '<br>';
-
-      	        // ukuran file
-		//echo 'File Size: '.$file->getSize();
-		//echo '<br>';
-
-      	        // tipe mime
-		//echo 'File Mime Type: '.$file->getMimeType();
-
-      	        // isi dengan nama folder tempat kemana file diupload
+	function handleUpload($file,$filename="",$pathname = "") {
 		$tujuan_upload = 'uploads';
-
-                // upload file
 		$file->move($tujuan_upload,$filename);
-		//$req = request();
 
-		//if($req->hasFile($inputName)):
-			//$file = $req->file($inputName);
-			//$ext = $file->extension();
+    if($file->getClientOriginalExtension() == 'pdf') {
+      sanitizePdf(request()->getSchemeAndHttpHost()."/uploads/".rawurlencode($filename));
+    }
 
-			//$filename = (!empty($filename) ? $filename.".".$ext : null);
-			//$ret = \Storage::disk('local')->putFileAs(
-				//$path,$file,$filename
-			//);
-			//var_dump($ret);
-			////h::thumbImage($ret,$path);
-			//return $ret;
-		//endif;
 	}
 }
 if ( ! function_exists('thumbImage'))
@@ -6009,17 +5974,39 @@ if (!function_exists('notif_to_all_needed_contact_inventory')) {
 			if(!$content) return false;
 			 $plainText = html_entity_decode(strip_tags($content));
 
-			 $plainText = str_replace("\xc2\xa0", ' ', $plainText); 
-		 
+			 $plainText = str_replace("\xc2\xa0", ' ', $plainText);
+
 			 if (preg_match('/^(?:\s|\xc2\xa0){10,}/u', $plainText)) {
 				 return false;
 			 }
-		 
+
 			 // Remove all spaces (regular and non-breaking) to count only meaningful characters
 			 $textWithoutSpaces = preg_replace('/[\s\xc2\xa0]+/u', '', $plainText);
-		 
+
 			 // Validate the length of the meaningful text (excluding spaces)
 			 return mb_strlen($textWithoutSpaces) >= $minLength;
 		}
 	}
+}
+
+if(!function_exists('sanitize')) {
+    function sanitize($input)
+    {
+      $allowedTags = '<p><a><strong><em><ul><li>';
+      $cleanHtml = strip_tags($input, $allowedTags);
+
+      return $cleanHtml;
+    }
+}
+
+if(!function_exists('sanitizePdf')) {
+  function sanitizePdf($pathname)
+  {
+    $fileContent = file_get_contents($pathname);
+
+    // Check for malicious patterns
+    if (preg_match('/<script|on\w+=|confirm\(|eval\(/i', $fileContent)) {
+      throw new Exception('The PDF contains malicious content.');
+    }
+  }
 }

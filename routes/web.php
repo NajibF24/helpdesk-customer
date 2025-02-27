@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::get('/clear-cache', function() {
     $exitCode = Artisan::call('cache:clear');
@@ -174,4 +174,13 @@ Route::group(['middleware' => ['auth']], function() {
 	// Route::get('inventory_transaction_report', 'App\Http\Controllers\InventoryReportController@inventoryTransactionReport')->name('inventory_transaction_report.index');
 	Route::post('/update_next_approver/{ticketId}','App\Http\Controllers\CrudController@updateNextApprover');
 
+
+  // Route::get('/files/{filename}', function ($filename) {
+  //     $path = public_path("uploads/{$filename}");
+  //     if (!file_exists($path)) abort(404);
+
+  //     return response()->download($path, $filename, [
+  //       'Content-Disposition' => 'attachment',
+  //   ]);
+  // });
 });

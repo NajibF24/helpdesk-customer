@@ -78,7 +78,7 @@
                         </div>
                         <!--end::Section-->
                         <!--begin::Desc-->
-                        <?php 
+                        <?php
                         //var_dump($ticket->request_management);
                         $color = "text-warning";
                         $label = "";
@@ -111,7 +111,7 @@
                         <!--end::Desc-->
                     </div>
                     <!--end::Item-->
-                    
+
                     <!--begin::Item-->
                     <div class="mb-5">
                         <!--begin::Section-->
@@ -125,14 +125,14 @@
                         <!--end::Section-->
                         <!--begin::Desc-->
                         <p class="text-dark-50 m-0 pt-2 font-weight-normal">
-							<?php 
+							<?php
 							echo ticketNumber($ticket->id);
 							?>
                         </p>
                         <!--end::Desc-->
                     </div>
                     <!--end::Item-->
-                    
+
                     <!--begin::Item-->
                     <div class="mb-5">
                         <!--begin::Section-->
@@ -147,12 +147,12 @@
                         <!--begin::Desc-->
                         <div class="d-flex">
                             <p class="text-dark-50 m-0 pt-2 font-weight-normal mr-2">
-                                <?php 
+                                <?php
                                 if(!empty($ticket->next_approval_id)) {
                                     $contact = DB::table('contact')
                                                     ->where('id',$ticket->next_approval_id)
                                                     ->first();
-                                    echo $contact->name." ";
+                                    echo e($contact->name)." ";
                                     if($ticket->approval_state == "appoval_support") {
                                         echo "(Approval Support)";
                                     } else {
@@ -162,7 +162,7 @@
                                     echo "-";
                                 }
                                 ?>
-    
+
                             </p>
                             @if (accessv('edit_next_approver', 'create') && $ticket->status == 'Submit for Approval' )
                             <button class="btn btn-primary btn-sm" id="btn-edit-nextapprover" data-toggle="tooltip" data-placement="top" title="Synchronize Next Approver to Case Journey">
@@ -172,8 +172,8 @@
                         </div>
                         <!--end::Desc-->
                     </div>
-                    <!--end::Item-->                    
-                    
+                    <!--end::Item-->
+
                     <!--begin::Item-->
                     <div class="mb-5">
                         <!--begin::Section-->
@@ -187,10 +187,10 @@
                         <!--end::Section-->
                         <!--begin::Desc-->
                         <p class="text-dark-50 m-0 pt-2 font-weight-normal">
-							{{ $contact = DB::table('contact')->where('id', $ticket->team_id)->value('name') ?? '-' }}  
+							{{ $contact = DB::table('contact')->where('id', $ticket->team_id)->value('name') ?? '-' }}
 							/
 							{{$contact = DB::table('contact')->where('id', $ticket->agent_id)->value('name') ?? '-' }}
-                        
+
                         </p>
                         <!--end::Desc-->
                     </div>
@@ -209,7 +209,7 @@
                         <!--begin::Desc-->
                         <p class="text-dark-50 m-0 pt-2 font-weight-normal">
 							{{ empty($ticket->assign_time) ? "-" : date('M d, Y H:i', strtotime($ticket->assign_time))}}
-                        
+
                         </p>
                         <!--end::Desc-->
                     </div>
@@ -256,7 +256,7 @@
                         <!--end::Desc-->
                     </div>
                     <!--end::Item-->
-                    
+
                                         <!--begin::Item-->
                     <div class="mb-3">
                         <!--begin::Section-->
@@ -304,7 +304,7 @@
                         <!--end::Desc-->
                     </div>
                     <!--end::Item-->
-                    
+
                     <!--begin::Item-->
                     @if ($ticket->coverage_windows)
                     <div class="mb-5">
@@ -327,7 +327,7 @@
                     @endif
                     <!--end::Item-->
 
-					<?php 
+					<?php
 						//var_dump($ticket);
 						if ($ticket->finalclass == "service_request") {
 							$rtype =  "Service";
@@ -336,7 +336,7 @@
 						} else {
 							$rtype =  "Incident";
 						}
-					?>                    
+					?>
                     <!--begin::Item-->
                     <div class="mb-3">
                         <!--begin::Section-->
@@ -362,21 +362,21 @@
                         <!--end::Desc-->
                     </div>
                     <!--end::Item-->
-                    
-                    
-					<?php 
+
+
+					<?php
 					$list_ticket = DB::table('lnktickettoproblem')
 										->where('ticket_id',$ticket->id)
 										->join('ticket', 'ticket.id', '=', 'lnktickettoproblem.problem_ticket_id')
 										->get();
-										
+
 					$list_ticket2 = DB::table('lnktickettoproblem')
 										->where('problem_ticket_id',$ticket->id)
 										->join('ticket', 'ticket.id', '=', 'lnktickettoproblem.ticket_id')
 										->get();
 					//$parent_ticket = DB::table('ticket')->where('id', $ticket->parent_id)->first();
 					?>
-					@if($list_ticket->count() || $list_ticket2->count()) 
+					@if($list_ticket->count() || $list_ticket2->count())
                     <!--begin::Item-->
                     <div class="mb-5">
                         <!--begin::Section-->
@@ -389,11 +389,11 @@
                         </div>
                         <!--end::Section-->
                         <!--begin::Desc-->
-                        <p class="text-dark-50 m-0 pt-2 font-weight-normal">						
-							@foreach($list_ticket as $t) 
+                        <p class="text-dark-50 m-0 pt-2 font-weight-normal">
+							@foreach($list_ticket as $t)
 								<a target="_blank" href="{{URL('/').'/ticket-monitoring/'.$t->token}}">{{$t->ref}}</a> &nbsp; &nbsp;
 							@endforeach
-							@foreach($list_ticket2 as $t) 
+							@foreach($list_ticket2 as $t)
 								<a target="_blank" href="{{URL('/').'/ticket-monitoring/'.$t->token}}">{{$t->ref}}</a> &nbsp; &nbsp;
 							@endforeach
                         </p>
@@ -433,8 +433,8 @@
                         <!--end::Section-->
                         <!--begin::Desc-->
                         <p class="text-dark-50 m-0 pt-2 font-weight-normal">
-							<?php 
-							if($ticket->remaining_SLA > 0 && 
+							<?php
+							if($ticket->remaining_SLA > 0 &&
 								($ticket->remaining_SLA_unit == "minutes" || $ticket->remaining_SLA_unit == "Minute")) {
 								$hour = floor($ticket->remaining_SLA / 60);
 								//echo $hour;
@@ -453,7 +453,7 @@
                     <pre><?php var_dump($ticket);?></pre>
 					@endif
 
-                    
+
 
 	</div>
 	<!--end: Card Body-->

@@ -704,10 +704,11 @@ class CrudController extends AppBaseController
 			$list_filename = array();
 			$list_file_url = [];
 			$file = $request->file('file');
+
 			if($request->hasFile('file'))
 			{
 				$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
-				handleUpload($file,$filename,'/upload');
+				handleUpload($file,$filename,'/upload',$file->getPathName());
 				$list_filename[] = $filename;
 				$list_file_url[] = URL('/').'/uploads/'.$filename;
 			}
@@ -715,7 +716,7 @@ class CrudController extends AppBaseController
 			if($request->hasFile('file2'))
 			{
 				$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
-				handleUpload($file,$filename,'/upload');
+				handleUpload($file,$filename,'/upload',$file->getPathName());
 				$list_filename[] = $filename;
 				$list_file_url[] = URL('/').'/uploads/'.$filename;
 			}
@@ -723,7 +724,7 @@ class CrudController extends AppBaseController
 			if($request->hasFile('file3'))
 			{
 				$filename = izrand(5).'-'.removeSpecialCharacters($file->getClientOriginalName());
-				handleUpload($file,$filename,'/upload');
+				handleUpload($file,$filename,'/upload',$file->getPathName());
 				$list_filename[] = $filename;
 				$list_file_url[] = URL('/').'/uploads/'.$filename;
 			}
@@ -2546,7 +2547,7 @@ class CrudController extends AppBaseController
 					->where('ticket_id',$ticket->id)
 					->where('approval_id',$contact->id)
 					->exists();
-	
+
 				if ($has_approve) {
 				} else {
 					$next_approval_id = $contact->id;
