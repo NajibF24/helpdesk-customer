@@ -6020,6 +6020,7 @@ if(!function_exists('sanitizePdf')) {
           throw new Exception('The PDF contains malicious content.');
       }
     } catch (Exception $e) {
+      Log::error($e->getMessage());
       throw new Exception('The PDF contains malicious content.');
     }
 
