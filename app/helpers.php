@@ -5666,7 +5666,12 @@ if ( ! function_exists('handleUpload'))
 		$file->move($tujuan_upload,$filename);
 
     if($file->getClientOriginalExtension() == 'pdf') {
-      sanitizePdf(request()->getSchemeAndHttpHost()."/uploads/".rawurlencode($filename));
+      try {
+        sanitizePdf(request()->getSchemeAndHttpHost()."/uploads/".rawurlencode($filename));
+      } catch(\Exception $e) {
+        // $file->delete('public/'.$tujuan_upload);
+        throw new Exception($e->getMessage());
+      }
     }
 
 	}
@@ -6002,11 +6007,21 @@ if(!function_exists('sanitize')) {
 if(!function_exists('sanitizePdf')) {
   function sanitizePdf($pathname)
   {
-    $fileContent = file_get_contents($pathname);
+    try {
+      $parser = new Parser();
+      $pdf = $parser->parseFile($pathname);
 
-    // Check for malicious patterns
-    if (preg_match('/<script|on\w+=|confirm\(|eval\(/i', $fileContent)) {
+
+      // Extract text content
+      $text = $pdf->getText();
+
+      // Check for suspicious patterns (e.g., JavaScript or XSS payloads)
+      if (preg_match('/<script|javascript:/i', $text)) {
+          throw new Exception('The PDF contains malicious content.');
+      }
+    } catch (Exception $e) {
       throw new Exception('The PDF contains malicious content.');
     }
+
   }
 }
