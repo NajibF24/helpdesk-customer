@@ -6007,22 +6007,11 @@ if(!function_exists('sanitize')) {
 if(!function_exists('sanitizePdf')) {
   function sanitizePdf($pathname)
   {
-    try {
-      $parser = new Parser();
-      $pdf = $parser->parseFile($pathname);
+    $fileContent = file_get_contents($pathname);
 
-
-      // Extract text content
-      $text = $pdf->getText();
-
-      // Check for suspicious patterns (e.g., JavaScript or XSS payloads)
-      if (preg_match('/<script|javascript:/i', $text)) {
-          throw new Exception('The PDF contains malicious content.');
-      }
-    } catch (Exception $e) {
-      Log::error($e->getMessage());
+    // Check for malicious patterns
+    if (preg_match('/<script|on\w+=|confirm\(|eval\(/i', $fileContent)) {
       throw new Exception('The PDF contains malicious content.');
     }
-
   }
 }
