@@ -5997,7 +5997,7 @@ if (!function_exists('notif_to_all_needed_contact_inventory')) {
 if(!function_exists('sanitize')) {
     function sanitize($input)
     {
-      $allowedTags = '<p><a><strong><em><ul><li>';
+      $allowedTags = '<p><a><strong><em><ul><li><img>';
       $cleanHtml = strip_tags($input, $allowedTags);
 
       return $cleanHtml;
