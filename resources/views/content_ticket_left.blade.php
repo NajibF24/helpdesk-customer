@@ -121,7 +121,7 @@
 						<div class="row mt-4">
 							<br/>
 							<!--begin::Item-->
-							<div class="mb-2  col-md-4">
+							<div class="mb-2 col-12">
 								<!--begin::Section-->
 								<div class="d-flex align-items-center">
 									<!--begin::Text-->

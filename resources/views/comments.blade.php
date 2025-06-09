@@ -40,7 +40,7 @@ $comments = DB::table('comment')->orderBy('id','desc')->where('ticket_id',$ticke
 					</div>
 					<!--end::Pic-->
 					<!--begin: Info-->
-					<div class="flex-grow-1">
+					<div class="flex-grow-1 overflow-auto">
 						<!--begin::Title-->
 						<div class="d-flex align-items-center justify-content-between flex-wrap mt-2">
 							<!--begin::User-->
