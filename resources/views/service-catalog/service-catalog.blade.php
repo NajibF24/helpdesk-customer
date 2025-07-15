@@ -150,14 +150,19 @@ $(document).ready(function() {
 -->
 					<ul class="nav flex-column nav-pills">
 						<?php
+
+
 							$contact = DB::table('contact')->where('id', Auth::user()->person)->first();
 							//var_dump($contact);
-							$departments = DB::table('organization')
-								->whereIn('type', ['Department','DEPARTEMENT'])
-								->when(request()->query('division'), function($q) {
-									$q->where('parent', request()->query('division'));
-								})
-								->get();
+
+							$departments = [];
+
+							if(!empty(request()->query('division'))) {
+								$departments = DB::table('organization')
+									->whereIn('type', ['Department','DEPARTEMENT'])
+									->where('parent', request()->query('division'))
+									->get();
+							}
 
 							$n=0;
 							$i=0;
