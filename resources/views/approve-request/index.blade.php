@@ -19,9 +19,9 @@
 	display:block !important;
 	margin-left: -6px;
 }
-tbody tr td:last-child {
+/* tbody tr td:last-child {
   display:none !important;
-}
+} */
 </style>
 
 <style>
@@ -170,13 +170,20 @@ tr td {
 			</div>
 			@include('approve-request.goods_issue_list')
 		</section>
+
+		<section id="goods-receive" class="mt-5">
+			<div class="p-3">
+				<h3>Goods Receive</h3>
+			</div>
+			@include('approve-request.goods_receive_list')
+		</section>
 	</div>
 </div>
 <script>
    $(document).ready( function () {
 		setTimeout(function() {
 			console.log("ok");
-			$(".table-responsive").on('click', 'tbody tr', function(){
+			$("#table_ticket").on('click', 'tbody tr', function(){
 				//alert($(this).children("td").last().children('.edit-button').attr('href'));
 				window.open($(this).children("td").last().html(), '_blank');
 				//window.location.replace($(this).children("td").last().children('a').attr('href'));
@@ -186,8 +193,7 @@ tr td {
 </script>
 <script>
 $(document).ready( function () {
-$('#table_ticket').DataTable({
-});  
+$('#table_ticket').DataTable({});  
 
 	$( "td" ).each(function( index ) {
 		console.log($(this).html());

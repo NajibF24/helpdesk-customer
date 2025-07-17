@@ -101,7 +101,7 @@
         $('#goods-issue-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('goods_issue.index') }}",
+            ajax: "{{ str_contains(request()->url(), 'approve-request') ? route('goods_issue.index', ['from' => 'approve-request']) : route('goods_issue.index') }}",
             columns: [{
                     data: 'id',
                     name: 'id'
@@ -137,11 +137,17 @@
                     data: 'action',
                     name: 'action',
                     orderable: false,
-                    sortable: false
+                    sortable: false,
                 },
             ]
         });
+
+        $('#goods-issue-table tbody').on('click', 'tr', function() {
+            $(this).children("td").last().children()[1].click()
+            // window.open($(this).children("td").last().children, '_blank');
+        })
     });
+
 
 </script>
 @endsection
