@@ -1244,6 +1244,109 @@ form.innerHTML = `
 			});
 		}
     });
+
+	$(".solved").click(function(e) {
+    Swal.fire({title: "Confirmation",text: "Are you sure want to mark this ticket as Solved ?",icon: "question",showCancelButton: true,confirmButtonText: "Yes!"
+    }).then(function(result) {
+        if (result.value) {
+			 KTApp.blockPage({overlayColor: '#000000',state: 'primary',message: 'Processing...'});
+			$.ajax({
+				type: "POST",
+				url: '{{URL("/")}}/ticketAction',
+				data: "id={{$ticket->id}}&action=solved&message=",
+				//dataType: 'json',
+				success: function(data){
+					KTApp.unblockPage();
+					console.log(data);
+					var obj = JSON.parse(data);
+					if(obj.success) {
+						Swal.fire("Confirmation",obj.message,"success")
+						setTimeout(function() {
+							location.reload();
+						},3000);
+					} else {
+						Swal.fire("Failed",obj.message,"error")
+					}
+				},
+				error: function(){
+					KTApp.unblockPage();
+					console.log("error");
+					Swal.fire("Failed","Sorry, your action is failed","error")
+
+				}
+			});
+        }
+    });
+});
+$(".on_progress").click(function(e) {
+    Swal.fire({title: "Confirmation",text: "Are you sure want to start this case and mark this ticket as On Progress ?",icon: "question",showCancelButton: true,confirmButtonText: "Yes!"
+    }).then(function(result) {
+        if (result.value) {
+			 KTApp.blockPage({overlayColor: '#000000',state: 'primary',message: 'Processing...'});
+			$.ajax({
+				type: "POST",
+				url: '{{URL("/")}}/ticketAction',
+				data: "id={{$ticket->id}}&action=on_progress&message=",
+				//dataType: 'json',
+				success: function(data){
+					KTApp.unblockPage();
+					console.log(data);
+					var obj = JSON.parse(data);
+					if(obj.success) {
+						Swal.fire("Confirmation",obj.message,"success")
+						setTimeout(function() {
+							location.reload();
+						},3000);
+					} else {
+						Swal.fire("Failed",obj.message,"error")
+					}
+				},
+				error: function(){
+					KTApp.unblockPage();
+					console.log("error");
+					Swal.fire("Failed","Sorry, your action is failed","error")
+
+				}
+			});
+        }
+    });
+});
+$(".escalate").click(function(e) {
+    Swal.fire({title: "Confirmation",text: "Are you sure want do escalation for this ticket ?",icon: "question",showCancelButton: true,confirmButtonText: "Yes!"
+    }).then(function(result) {
+        if (result.value) {
+			 KTApp.blockPage({overlayColor: '#000000',state: 'primary',message: 'Processing...'});
+			$.ajax({
+				type: "POST",
+				url: '{{URL("/")}}/ticketAction',
+				data: "id={{$ticket->id}}&action=escalate&message=",
+				//dataType: 'json',
+				success: function(data){
+					KTApp.unblockPage();
+					console.log(data);
+					var obj = JSON.parse(data);
+					if(obj.success) {
+						Swal.fire("Confirmation",obj.message,"success")
+						setTimeout(function() {
+							location.reload();
+						},3000);
+					} else {
+						Swal.fire("Failed",obj.message,"error")
+					}
+
+				},
+				error: function(){
+					KTApp.unblockPage();
+					console.log("error");
+					Swal.fire("Failed","Sorry, your action is failed","error")
+
+
+				}
+			});
+        }
+    });
+});
+
 });
 </script>
 @endsection
