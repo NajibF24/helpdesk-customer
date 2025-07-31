@@ -48,7 +48,8 @@
 		<link rel="stylesheet" href="{{URL('/')}}/vendor/select2/select2.min.css">
 		<script src="{{URL('/')}}/vendor/select2/select2.min.js"></script>
 		<link href="{{URL('/')}}/vendor/summernote/summernote.min.css" rel="stylesheet">
-
+		<link href="{{URL('/')}}/assets/excel-lib/styles.css" rel="stylesheet">
+		
 		<script>
 		$(document).ready(function() {
 			$('.select2').select2();
