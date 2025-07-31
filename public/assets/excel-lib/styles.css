@@ -1,0 +1,327 @@
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f8f9fa;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  } */
+  
+  /* Header */
+  .header {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    height: 100%;
+    justify-content: normal;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 4px;
+  }
+  
+  .header p {
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  /* Formula Bar */
+  .formula-bar {
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px 16px;
+  }
+  
+  .formula-bar-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .cell-reference {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .cell-reference label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .cell-name {
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    min-width: 60px;
+    text-align: center;
+  }
+  
+  .formula-input-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .formula-input-container label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .formula-input {
+    flex: 1;
+    padding: 6px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+  }
+  
+  .formula-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  /* Status Bar */
+  .status-bar {
+    background: #dbeafe;
+    border-bottom: 1px solid #93c5fd;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #1e40af;
+  }
+  
+  .status-bar.drag {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .status-bar.copy {
+    background: #fed7aa;
+    color: #c2410c;
+    border-bottom-color: #fb923c;
+  }
+  
+  /* Spreadsheet Container */
+  .spreadsheet-container {
+    flex: 1;
+    overflow: auto;
+    background: white;
+  }
+  
+  .spreadsheet-grid {
+    display: inline-block;
+    min-width: 100%;
+  }
+  
+  /* Grid Rows */
+  .grid-row {
+    display: flex;
+  }
+  
+  .grid-row.header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  /* Cells */
+  .cell {
+    width: 96px;
+    height: 32px;
+    border: 1px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 14px;
+    cursor: cell;
+    position: relative;
+    background: white;
+  }
+  
+  .cell.header {
+    background: #f3f4f6;
+    font-weight: 500;
+    justify-content: center;
+    cursor: default;
+  }
+  
+  .cell.row-header {
+    width: 48px;
+    background: #f3f4f6;
+    font-weight: 500;
+    justify-content: center;
+    cursor: default;
+  }
+  
+  .cell.selected {
+    background: #dbeafe !important;
+    border: 2px solid #3b82f6;
+    z-index: 5;
+  }
+  
+  .cell.copied {
+    background: #fef3c7 !important;
+    border: 2px dashed #f59e0b;
+    animation: pulse 2s infinite;
+  }
+  
+  .cell.drag-target {
+    background: #dcfce7 !important;
+    border: 2px solid #22c55e;
+    animation: pulse 1s infinite;
+  }
+  
+  .cell.editing input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0 8px;
+    font-size: 14px;
+    background: transparent;
+  }
+  
+  /* Drag Handle */
+  .drag-handle {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: #3b82f6;
+    border: 2px solid white;
+    cursor: crosshair;
+    z-index: 20;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  .drag-handle:hover {
+    width: 10px;
+    height: 10px;
+    background: #2563eb;
+  }
+  
+  /* Copy Indicator */
+  .copy-indicator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-top: 8px solid #f59e0b;
+  }
+  
+  /* Context Menu */
+  .context-menu {
+    position: fixed;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    padding: 4px 0;
+    z-index: 50;
+    min-width: 128px;
+  }
+  
+  .context-menu-item {
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .context-menu-item:hover {
+    background: #f3f4f6;
+  }
+  
+  .context-menu-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .context-menu-item .shortcut {
+    font-size: 12px;
+    background: #e5e7eb;
+    padding: 2px 4px;
+    border-radius: 3px;
+    margin-right: 8px;
+  }
+  
+  /* Help Section */
+  .help-section {
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    padding: 16px;
+  }
+  
+  .help-content {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.5;
+  }
+  
+  /* Animations */
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+  
+  /* Scrollbar Styling */
+  .spreadsheet-container::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .spreadsheet-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .spreadsheet-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 6px;
+  }
+  
+  .spreadsheet-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .formula-bar-content {
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+    }
+  
+    .cell {
+      width: 80px;
+    }
+  }
+  
