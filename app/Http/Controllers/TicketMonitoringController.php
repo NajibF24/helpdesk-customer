@@ -125,11 +125,47 @@ class TicketMonitoringController extends Controller {
 		];
         $ticket_statuses = DB::table('ticket_approval')->where('ticket_id', $id)->get();
 
+		$form_builder = json_decode($ticket->form_builder_json);
+
+		$data_json = json_decode($ticket->data_json);
+		$data_json_excel_table = json_decode($data_json->excel_data);
+		$excel_table_header = array_filter($data_json_excel_table[1] ?? [], function($item) {
+			return $item != '';
+		});
+		$excel_table_data = [];
+
+		// dd($data_json_excel_table);
+		foreach (array_values($data_json_excel_table) as $index => $row) {
+			if ($index > 1) {
+				$adjusted_row = [];
+				$empty_cells_index = [];
+
+				for ($i = count($row) - 1; $i >= 0; $i--) {
+					if ($row[$i] == '') {
+						$empty_cells_index[] = $i;
+
+						if($row[$i - 1] != '') {
+							break;
+						}
+					}
+				}
+
+				foreach ($empty_cells_index as $cellIndex) {
+					unset($row[$cellIndex]);
+				}
+
+				$excel_table_data[] = $row;
+			}
+		}
         return view('ticket-monitoring.show')
             ->with('ticket', $ticket)
             ->with('title', $title)
             ->with('statuses', $ticket_statuses)
-            ->with('breadcumb', $breadcumb);
+            ->with('breadcumb', $breadcumb)
+			->with('form_builder', $form_builder)
+			->with('data_json', $data_json)
+			->with('excel_table_header', $excel_table_header)
+			->with('excel_table_data', $excel_table_data);
     }
 
     public function replyComment(Request $request)

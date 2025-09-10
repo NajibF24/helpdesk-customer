@@ -176,9 +176,9 @@ class ServiceCatalogController extends Controller {
 			die;
 		}
 
-        $input = $request->all();
 		DB::beginTransaction();
         try {
+			// dd($input);
 			$request->validate(['file' => [
 				'file',
 				'mimes:jpg,jpeg,png,gif,doc,docx,pdf,xls,xlsx,txt,pptx,csv', 
@@ -207,7 +207,6 @@ class ServiceCatalogController extends Controller {
 			//var_dump($request_management);
 			//die;
 			$form_builder = DB::table('form_builder')->where('id',$request_management->form_builder)->first();
-
 			$list_filename = array();
 			$list_file_url = [];
 			$file = $request->file('file');

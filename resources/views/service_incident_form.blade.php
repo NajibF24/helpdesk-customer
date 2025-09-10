@@ -3,27 +3,6 @@
 	min-height:150px !important;
 }
 </style>
-<!-- include summernote css/js -->
-<!--
-<link href="{{URL('/')}}/vendor/summernote/summernote.min.css" rel="stylesheet">
-<script src="{{URL('/')}}/vendor/summernote/summernote.min.js"></script>
-
-<script src="{{URL('/')}}/vendor/ckeditor/ckeditor.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.ckeditor').ckeditor();
-		CKEDITOR.replace('wysiwyg-editor', {
-			filebrowserUploadUrl: "{{route('ckeditor.image-upload', ['_token' => csrf_token() ])}}",
-			filebrowserUploadMethod: 'form'
-		});
-    });
-
-//$(document).ready(function() {
-  //$('#summernote').summernote('code', '<p><br></p>');
-//});
-</script>
--->
-
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">

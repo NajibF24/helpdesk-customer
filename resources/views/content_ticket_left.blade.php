@@ -148,17 +148,46 @@
 							<?php
 							//var_dump($ticket->form_builder_json);
 							//echo "<pre>";
-							$form_builder = json_decode($ticket->form_builder_json);
-							//var_dump($form_builder);
-							//echo "<br/><br/>";
-
-							$data_json = json_decode($ticket->data_json);
-							//var_dump($data_json);
-							//echo "</pre>";
 							if(!empty($form_builder)) {
 								foreach($form_builder as $f) {
 									//var_dump($f);
-									if(str_contains($f->type, 'data_grid')) {
+									if(str_contains($f->type, 'excel_table')) {
+										?>
+
+										<div class="mb-2 col-md-12">
+											<!--begin::Section-->
+											<div class="d-flex align-items-center">
+												<!--begin::Text-->
+												<div class="d-flex flex-column flex-grow-1">
+													<span class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1"><?=$f->label?></span>
+												</div>
+												<!--end::Text-->
+											</div>
+
+
+											<table class="table table-bordered table-striped">
+												<thead>
+													<tr>
+														@foreach($excel_table_header as $header)
+															<th>{{$header}}</th>
+														@endforeach
+													</tr>
+												</thead>
+												<tbody>
+													@foreach($excel_table_data as $row)
+														<tr>
+															@foreach($row as $cell)
+																<td>{{$cell}}</td>
+															@endforeach
+														</tr>
+													@endforeach
+												</tbody>
+											</table>
+
+										</div>
+
+										<?php
+									} else if(str_contains($f->type, 'data_grid')) {
 										if(!empty($f->header)) {
 										//echo "MASUK";
 										?>
