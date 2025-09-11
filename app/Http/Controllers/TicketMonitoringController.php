@@ -128,7 +128,7 @@ class TicketMonitoringController extends Controller {
 		$form_builder = json_decode($ticket->form_builder_json);
 
 		$data_json = json_decode($ticket->data_json);
-		$data_json_excel_table = json_decode($data_json->excel_data);
+		$data_json_excel_table = json_decode($data_json->excel_data ?? '[]');
 		$excel_table_header = array_filter($data_json_excel_table[1] ?? [], function($item) {
 			return $item != '';
 		});
