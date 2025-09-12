@@ -21,7 +21,7 @@
   .header {
     background: white;
     border-bottom: 1px solid #e5e7eb;
-    height: 100%;
+    /* height: 100%; */
     justify-content: normal;
   }
   
