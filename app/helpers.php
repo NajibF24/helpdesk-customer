@@ -1370,7 +1370,7 @@ if (!function_exists('getInventoryManagementCaseJourneyReturn')) {
 
 								for($i=0;$i<count($list_approval_user_custom);$i++) {
 									$contact = DB::table('contact')
-										->where('contact.status', '=', 'Active')
+										// ->where('contact.status', '=', 'Active')
 										->whereNull('contact.deleted_at')
 										->where('contact.job_title',$list_approval_user_custom[$i])->first();
 
@@ -1484,7 +1484,7 @@ if (!function_exists('getInventoryManagementCaseJourneyReturn')) {
 
 							for($i=0;$i<count($list_approval_user_custom);$i++) {
 								$contact = DB::table('contact')
-									->where('contact.status', '=', 'Active')
+									// ->where('contact.status', '=', 'Active')
 									->whereNull('contact.deleted_at')
 									->where('contact.job_title',$list_approval_user_custom[$i])->first();
 
@@ -1613,7 +1613,7 @@ if (!function_exists('getInventoryManagementCaseJourneyReturn')) {
 
 								for($i=0;$i<count($list_approval_support_custom);$i++) {
 									$contact = DB::table('contact')
-													->where('contact.status', '=', 'Active')
+													// ->where('contact.status', '=', 'Active')
 													->whereNull('contact.deleted_at')
 													->where('contact.job_title',$list_approval_support_custom[$i])->first();
 									if($contact) {
@@ -2015,7 +2015,7 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 
 								for($i=0;$i<count($list_approval_user_custom);$i++) {
 									$contact = DB::table('contact')
-										->where('contact.status', '=', 'Active')
+										// ->where('contact.status', '=', 'Active')
 										->whereNull('contact.deleted_at')
 										->where('contact.job_title',$list_approval_user_custom[$i])->first();
 
@@ -2129,7 +2129,7 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 
 							for($i=0;$i<count($list_approval_user_custom);$i++) {
 								$contact = DB::table('contact')
-									->where('contact.status', '=', 'Active')
+									// ->where('contact.status', '=', 'Active')
 									->whereNull('contact.deleted_at')
 									->where('contact.job_title',$list_approval_user_custom[$i])->first();
 
@@ -2256,7 +2256,7 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 
 								for($i=0;$i<count($list_approval_support_custom);$i++) {
 									$contact = DB::table('contact')
-													->where('contact.status', '=', 'Active')
+													// ->where('contact.status', '=', 'Active')
 													->whereNull('contact.deleted_at')
 													->where('contact.job_title',$list_approval_support_custom[$i])->first();
 									if($contact) {
