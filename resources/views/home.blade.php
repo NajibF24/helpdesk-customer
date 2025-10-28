@@ -18,9 +18,9 @@ $list_bawahan = array();
 if (Auth::user()->person) {
 	$contact = DB::table('contact')->where('id', Auth::user()->person)->first();
 
-	if ($contact->job_title) {
+	if (!empty($contact) && $contact->job_title) {
 
-		$list_bawahan = get_bawahan($contact->job_title);
+		$list_bawahan = get_bawahan(@$contact->job_title);
 		//$list_child_job_title = DB::table('job_title')->where('parent_id',$contact->job_title)->get();
 		//for() {
 

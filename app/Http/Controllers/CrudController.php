@@ -288,7 +288,7 @@ class CrudController extends AppBaseController
 
 		$query2 = $query2->addColumn('nama_table', $type);
 		$query2->editColumn('status', function($data){
-						return statusHtml($data->status);
+						return statusHtml(@$data->status);
 					});
 		$list_sample_table = array();
 		$disposal = false;

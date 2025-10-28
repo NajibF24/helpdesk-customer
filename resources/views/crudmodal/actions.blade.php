@@ -1,4 +1,4 @@
-{{URL('/')}}/ticket-monitoring/{{ $token }}
+{{URL('/')}}/ticket-monitoring/{{ @$token }}
 
 @if(false)
 <a href="{!! route('edit', [$id,$nama_table]) !!}" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"style="    display: contents;">
