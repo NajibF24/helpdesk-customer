@@ -21,6 +21,7 @@ class ArticleController extends Controller
     {
         $title = "FAQ & Tutorials";
         $faqcs = DB::table('faq_category')->get();
+
         $query = "";
         $result = $this->common_helper->parseTree($faqcs, 0);
 
