@@ -6021,3 +6021,44 @@ if(!function_exists('sanitizePdf')) {
     }
   }
 }
+
+/**
+ * Safely slugify a string for URLs or filenames.
+ *
+ * @param string $string
+ * @param string $separator
+ * @return string
+ */
+function safe_slugify(string $string, string $separator = '-'): string
+{
+    // Normalize encoding
+    $string = mb_convert_encoding($string, 'UTF-8', 'auto');
+
+    // Remove HTML tags and decode entities
+    $string = strip_tags(html_entity_decode($string, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+    // Escape potentially dangerous characters
+    $string = str_replace(
+        ['`', '"', "'", '\\', '/', '<', '>', ';', ':', '&', '%', '#', '?', '!'],
+        '',
+        $string
+    );
+
+    // Convert accented characters to ASCII (requires intl extension)
+    if (class_exists('Transliterator')) {
+        $transliterator = Transliterator::create('Any-Latin; Latin-ASCII');
+        $string = $transliterator->transliterate($string);
+    }
+
+    // Replace non-alphanumeric characters with the separator
+    $string = preg_replace('/[^A-Za-z0-9]+/', $separator, $string);
+
+    // Remove duplicate separators
+    $string = preg_replace('/' . preg_quote($separator, '/') . '+/', $separator, $string);
+
+    // Trim separators from start and end
+    $string = trim($string, $separator);
+
+    // Lowercase for clean slugs
+    return strtolower($string);
+}

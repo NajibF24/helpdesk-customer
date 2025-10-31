@@ -51,22 +51,22 @@
 								<div class="card">
 									<div class="card-header" id="headingOne5">
 										@if (isset($menu['children']))
-										<?php $target = isset($menu['children']) ? '#target-parent-'.str_replace(' ','_',$menu['text']).'' : '#target-'.str_replace(' ','_',$menu['text']).''; ?>
+										<?php $target = isset($menu['children']) ? '#target-parent-'.safe_slugify($menu['text']).'' : '#target-'.safe_slugify($menu['text']).''; ?>
 										<div class="card-title collapsed" data-toggle="collapse" data-target="{{ $target }}">
 										{{ $menu['text'] }}</div>
 										@else
-										<a class="card-title collapsed" data-toggle="tab" href="#target-{{ str_replace(' ','_',$menu['text']) }}">
+										<a class="card-title collapsed" data-toggle="tab" href="#target-{{ safe_slugify($menu['text']) }}">
 											{{ $menu['text'] }}
 										</a>
 										@endif
 									</div>
-									<div id="target-parent-{{ str_replace(' ','_',$menu['text']) }}" class="collapse" data-parent="#accordionExample5">
+									<div id="target-parent-{{ safe_slugify($menu['text']) }}" class="collapse" data-parent="#accordionExample5">
 										<div class="card-body">
 											@if (isset($menu['children']))
 											<ul class="nav flex-column nav-pills">
 												@foreach ($menu['children'] as $child)
 												<li class="nav-item mb-2">
-													<a class="nav-link" data-toggle="tab" href="#target-{{ str_replace(' ','_',$child['text']) }}">
+													<a class="nav-link" data-toggle="tab" href="#target-{{ safe_slugify($child['text']) }}">
 														{{ $child['text'] }}
 													</a>
 												</li>
@@ -94,7 +94,7 @@
 							<?php
 								$faqs = DB::table('faq')->where('category_id', $menu['id'])->get();
 							?>
-							<div class="tab-pane fade show{{$j==0?' active':''}}" id="target-{{ str_replace(' ','_',$menu['text']) }}" role="tabpanel" aria-labelledby="home-tab-5">
+							<div class="tab-pane fade show{{$j==0?' active':''}}" id="target-{{ safe_slugify($menu['text']) }}" role="tabpanel" aria-labelledby="home-tab-5">
 								@if (count($faqs) > 0 || $j==0)
 									@if ($j==0)
 										@if ($faqs_search && count($faqs_search) > 0)
@@ -106,7 +106,7 @@
 												<div class="card">
 													<!--begin::Header-->
 													<div class="card-header">
-													<div class="card-title{{$q==0?'':' collapsed'}}" data-toggle="collapse" data-target="#target-{{ str_replace(' ','_',$faq_search->title) }}" aria-expanded="{{$q==0?'true':'false'}}" aria-controls="#target-{{ str_replace(' ','_',$faq_search->title) }}" role="button">
+													<div class="card-title{{$q==0?'':' collapsed'}}" data-toggle="collapse" data-target="#target-{{ safe_slugify($faq_search->title) }}" aria-expanded="{{$q==0?'true':'false'}}" aria-controls="#target-{{ safe_slugify($faq_search->title) }}" role="button">
 														<span class="svg-icon svg-icon-primary">
 															<!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-right.svg-->
 															<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -126,12 +126,12 @@
 														<a href="{{URL('/')}}/download_faq_pdf/{{ $faq_search->id }}" target="_blank">Download PDF</a>
 													</div>
 													<!--begin::Body-->
-													<div id="target-{{ str_replace(' ','_',$faq_search->title) }}" class="collapse {{ $q == 0 ? 'show' : ''}}">
+													<div id="target-{{ safe_slugify($faq_search->title) }}" class="collapse {{ $q == 0 ? 'show' : ''}}">
 														<div class="card-body text-dark-25 font-size-lg pl-8">Category: {{ $faq_search->category_name }}</div>
 														<div class="card-body text-dark-50 font-size-lg pl-8">{{ $faq_search->summary }}</div>
 														<br>
-														<a href="#target-desc-{{ str_replace(' ','_',$faq_search->title) }}" class="font-size-lg pl-8 collapsed" data-toggle="collapse" data-target="#target-desc-{{ str_replace(' ','_',$faq_search->title) }}" aria-controls="#target-desc-{{ str_replace(' ','_',$faq_search->title) }}">Detail</a>
-														<div class="card-body text-dark-50 font-size-lg pl-8 collapse content-pdf-{{$faq_search->id}}" id="target-desc-{{ str_replace(' ','_',$faq_search->title) }}" data-description="{{$faq_search->description}}">
+														<a href="#target-desc-{{ safe_slugify($faq_search->title) }}" class="font-size-lg pl-8 collapsed" data-toggle="collapse" data-target="#target-desc-{{ safe_slugify($faq_search->title) }}" aria-controls="#target-desc-{{ safe_slugify($faq_search->title) }}">Detail</a>
+														<div class="card-body text-dark-50 font-size-lg pl-8 collapse content-pdf-{{$faq_search->id}}" id="target-desc-{{ safe_slugify($faq_search->title) }}" data-description="{{$faq_search->description}}">
 															{!! $faq_search->description !!}
 														</div>
 													</div>
@@ -155,7 +155,7 @@
 											<div class="card">
 												<!--begin::Header-->
 												<div class="card-header" id="headingOne1">
-													<div class="card-title{{$n==0?'':' collapsed'}}" data-toggle="collapse" data-target="#target-{{ str_replace(' ','_',$faq->title) }}" aria-expanded="{{$n==0?'true':'false'}}" aria-controls="#target-{{ str_replace(' ','_',$faq->title) }}" role="button">
+													<div class="card-title{{$n==0?'':' collapsed'}}" data-toggle="collapse" data-target="#target-{{ safe_slugify($faq->title) }}" aria-expanded="{{$n==0?'true':'false'}}" aria-controls="#target-{{ safe_slugify($faq->title) }}" role="button">
 														<span class="svg-icon svg-icon-primary">
 															<!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-right.svg-->
 															<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -175,11 +175,11 @@
 													<a href="{{URL('/')}}/download_faq_pdf/{{ $faq->id }}" target="_blank">Download PDF</a>
 												</div>
 												<!--begin::Body-->
-												<div id="target-{{ str_replace(' ','_',$faq->title) }}" class="collapse {{ $n == 0 ? 'show' : ''}}" aria-labelledby="headingOne1" data-parent="#accordionExample1">
+												<div id="target-{{ safe_slugify($faq->title) }}" class="collapse {{ $n == 0 ? 'show' : ''}}" aria-labelledby="headingOne1" data-parent="#accordionExample1">
 													<div class="card-body text-dark-50 font-size-lg pl-12">{{ $faq->summary }}</div>
 													<br>
-													<a href="#target-desc-{{ str_replace(' ','_',$faq->title) }}" class="font-size-lg pl-12 collapsed" data-toggle="collapse" data-target="#target-desc-{{ str_replace(' ','_',$faq->title) }}" aria-controls="#target-desc-{{ str_replace(' ','_',$faq->title) }}">Detail</a>
-													<div class="card-body text-dark-50 font-size-lg pl-12 collapse content-pdf-{{$faq->id}}" id="target-desc-{{ str_replace(' ','_',$faq->title) }}" data-description="{{$faq->description}}">
+													<a href="#target-desc-{{ safe_slugify($faq->title) }}" class="font-size-lg pl-12 collapsed" data-toggle="collapse" data-target="#target-desc-{{ safe_slugify($faq->title) }}" aria-controls="#target-desc-{{ safe_slugify($faq->title) }}">Detail</a>
+													<div class="card-body text-dark-50 font-size-lg pl-12 collapse content-pdf-{{$faq->id}}" id="target-desc-{{ safe_slugify($faq->title) }}" data-description="{{$faq->description}}">
 														{!! $faq->description !!}
 													</div>
 												</div>
@@ -202,7 +202,7 @@
 								<?php
 									$faq_childs = DB::table('faq')->where('category_id', $child['id'])->get();
 								?>
-								<div class="tab-pane fade show" id="target-{{ str_replace(' ','_',$child['text']) }}" role="tabpanel" aria-labelledby="home-tab-5">
+								<div class="tab-pane fade show" id="target-{{ safe_slugify($child['text']) }}" role="tabpanel" aria-labelledby="home-tab-5">
 									@if (count($faq_childs) > 0)
 										@foreach ($faq_childs as $faq_child)
 											<!--begin::Accordion-->
@@ -211,7 +211,7 @@
 												<div class="card">
 													<!--begin::Header-->
 													<div class="card-header" id="headingOne1">
-														<div class="card-title{{$p==0?'':' collapsed'}}" data-toggle="collapse" data-target="#target-{{ str_replace(' ','_',$faq_child->title) }}" aria-expanded="{{$p==0?'true':'false'}}" aria-controls="#target-{{ str_replace(' ','_',$faq_child->title) }}" role="button">
+														<div class="card-title{{$p==0?'':' collapsed'}}" data-toggle="collapse" data-target="#target-{{ safe_slugify($faq_child->title) }}" aria-expanded="{{$p==0?'true':'false'}}" aria-controls="#target-{{ safe_slugify($faq_child->title) }}" role="button">
 															<span class="svg-icon svg-icon-primary">
 																<!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-right.svg-->
 																<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -231,11 +231,11 @@
 														<a href="{{URL('/')}}/download_faq_pdf/{{ $faq_child->id }}" target="_blank">Download PDF</a>
 													</div>
 													<!--begin::Body-->
-													<div id="target-{{ str_replace(' ','_',$faq_child->title) }}" class="collapse {{ $p == 0 ? 'show' : ''}}" aria-labelledby="headingOne1" data-parent="#accordionExample1">
+													<div id="target-{{ safe_slugify($faq_child->title) }}" class="collapse {{ $p == 0 ? 'show' : ''}}" aria-labelledby="headingOne1" data-parent="#accordionExample1">
 														<div class="card-body text-dark-50 font-size-lg pl-12">{{ $faq_child->summary }}</div>
 														<br>
-														<a href="#target-desc-{{ str_replace(' ','_',$faq_child->title) }}" class="font-size-lg pl-12 collapsed" data-toggle="collapse" data-target="#target-desc-{{ str_replace(' ','_',$faq_child->title) }}" aria-controls="#target-desc-{{ str_replace(' ','_',$faq_child->title) }}">Detail</a>
-														<div class="card-body text-dark-50 font-size-lg pl-12 collapse content-pdf-{{$faq_child->id}}" id="target-desc-{{ str_replace(' ','_',$faq_child->title) }}" data-description="{{$faq_child->description}}">
+														<a href="#target-desc-{{ safe_slugify($faq_child->title) }}" class="font-size-lg pl-12 collapsed" data-toggle="collapse" data-target="#target-desc-{{ safe_slugify($faq_child->title) }}" aria-controls="#target-desc-{{ safe_slugify($faq_child->title) }}">Detail</a>
+														<div class="card-body text-dark-50 font-size-lg pl-12 collapse content-pdf-{{$faq_child->id}}" id="target-desc-{{ safe_slugify($faq_child->title) }}" data-description="{{$faq_child->description}}">
 															{!! $faq_child->description !!}
 														</div>
 													</div>
