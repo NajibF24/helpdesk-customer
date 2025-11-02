@@ -1237,7 +1237,7 @@ if (!function_exists('getInventoryManagementCaseJourneyReturn')) {
 					//'Draft',
 					//'new','pending','waiting_for_approval',
 					//'Waiting for User','Submit for Approval',
-					'rejected'
+					'rejected', 'full_approved'
 					])) {
 						$detail_approval_list = DB::table('goods_receive_approvals')
 											->where('goods_receive_id',$detail->id)
@@ -1877,7 +1877,7 @@ if (!function_exists('getInventoryManagementCaseJourney')) {
 					//'Draft',
 					//'new','pending','waiting_for_approval',
 					//'Waiting for User','Submit for Approval',
-					'rejected'
+					'rejected', 'full_approved'
 					])) {
 						$detail_approval_list = DB::table('goods_issue_approvals')
 											->where('goods_issue_id',$detail->id)

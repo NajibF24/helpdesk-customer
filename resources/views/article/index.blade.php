@@ -45,9 +45,9 @@
 				<div class="col-lg-3">
 					<ul class="nav flex-column nav-pills">
 						<?php $i=0;?>
-						@foreach ($menus as $menu)
+						@foreach ($menus as $key => $menu)
 						<li class="nav-item mb-2">
-							<div class="accordion accordion-light {{ isset($menu['children']) ? 'accordion-toggle-arrow' : '' }}" id="accordionExample5" style="border-style:none;">
+							<div class="accordion accordion-light {{ isset($menu['children']) ? 'accordion-toggle-arrow' : '' }}" id="accordionExampleMenu{{$key}}" style="border-style:none;">
 								<div class="card">
 									<div class="card-header" id="headingOne5">
 										@if (isset($menu['children']))
@@ -60,7 +60,7 @@
 										</a>
 										@endif
 									</div>
-									<div id="target-parent-{{ safe_slugify($menu['text']) }}" class="collapse" data-parent="#accordionExample5">
+									<div id="target-parent-{{ safe_slugify($menu['text']) }}" class="collapse" data-parent="#accordionExampleMenu{{$key}}">
 										<div class="card-body">
 											@if (isset($menu['children']))
 											<ul class="nav flex-column nav-pills">
@@ -90,6 +90,7 @@
 						<?php $n=0;?>
 						<?php $p=0;?>
 						<?php $q=0;?>
+
 						@foreach ($menus as $menu)
 							<?php
 								$faqs = DB::table('faq')->where('category_id', $menu['id'])->get();
@@ -106,7 +107,7 @@
 												<div class="card">
 													<!--begin::Header-->
 													<div class="card-header">
-													<div class="card-title{{$q==0?'':' collapsed'}}" data-toggle="collapse" data-target="#target-{{ safe_slugify($faq_search->title) }}" aria-expanded="{{$q==0?'true':'false'}}" aria-controls="#target-{{ safe_slugify($faq_search->title) }}" role="button">
+													<div class="card-title{{$q==0?'':' collapsed'}}" data-toggle="collapse" data-target="#target-faqsearch-{{ safe_slugify($faq_search->title) }}" aria-expanded="{{$q==0?'true':'false'}}" aria-controls="#target-faqsearch-{{ safe_slugify($faq_search->title) }}" role="button">
 														<span class="svg-icon svg-icon-primary">
 															<!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-right.svg-->
 															<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -126,7 +127,7 @@
 														<a href="{{URL('/')}}/download_faq_pdf/{{ $faq_search->id }}" target="_blank">Download PDF</a>
 													</div>
 													<!--begin::Body-->
-													<div id="target-{{ safe_slugify($faq_search->title) }}" class="collapse {{ $q == 0 ? 'show' : ''}}">
+													<div id="target-faqsearch-{{ safe_slugify($faq_search->title) }}" class="collapse {{ $q == 0 ? 'show' : ''}}">
 														<div class="card-body text-dark-25 font-size-lg pl-8">Category: {{ $faq_search->category_name }}</div>
 														<div class="card-body text-dark-50 font-size-lg pl-8">{{ $faq_search->summary }}</div>
 														<br>
@@ -148,14 +149,14 @@
 											<h1>Welcome FAQs</h1>
 										@endif
 									@endif
-									@foreach ($faqs as $faq)
+									@foreach ($faqs as $key => $faq)
 										<!--begin::Accordion-->
-										<div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="accordionExample1" style="border-style:none;">
+										<div class="accordion accordion-light accordion-light-borderless accordion-svg-toggle" id="accordionExample{{$key}}" style="border-style:none;">
 											<!--begin::Item-->
 											<div class="card">
 												<!--begin::Header-->
 												<div class="card-header" id="headingOne1">
-													<div class="card-title{{$n==0?'':' collapsed'}}" data-toggle="collapse" data-target="#target-{{ safe_slugify($faq->title) }}" aria-expanded="{{$n==0?'true':'false'}}" aria-controls="#target-{{ safe_slugify($faq->title) }}" role="button">
+													<div class="card-title{{$n==0?'':' collapsed'}}" data-toggle="collapse" data-target="#target-faq-{{ safe_slugify($faq->title) }}" aria-expanded="{{$n==0?'true':'false'}}" aria-controls="#target-faq-{{ safe_slugify($faq->title) }}" role="button">
 														<span class="svg-icon svg-icon-primary">
 															<!--begin::Svg Icon | path:assets/media/svg/icons/Navigation/Angle-double-right.svg-->
 															<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -175,7 +176,7 @@
 													<a href="{{URL('/')}}/download_faq_pdf/{{ $faq->id }}" target="_blank">Download PDF</a>
 												</div>
 												<!--begin::Body-->
-												<div id="target-{{ safe_slugify($faq->title) }}" class="collapse {{ $n == 0 ? 'show' : ''}}" aria-labelledby="headingOne1" data-parent="#accordionExample1">
+												<div id="target-faq-{{ safe_slugify($faq->title) }}" class="collapse {{ $n == 0 ? 'show' : ''}}" aria-labelledby="headingOne1" data-parent="#accordionExample{{$key}}">
 													<div class="card-body text-dark-50 font-size-lg pl-12">{{ $faq->summary }}</div>
 													<br>
 													<a href="#target-desc-{{ safe_slugify($faq->title) }}" class="font-size-lg pl-12 collapsed" data-toggle="collapse" data-target="#target-desc-{{ safe_slugify($faq->title) }}" aria-controls="#target-desc-{{ safe_slugify($faq->title) }}">Detail</a>
@@ -195,6 +196,7 @@
 								@endif
 								<!--end::Item-->
 							</div>
+
 
 							<!-- Init Child Content Tab -->
 							@if (isset($menu['children']))
