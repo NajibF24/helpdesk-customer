@@ -272,43 +272,42 @@
 
 <script>
 (function() {
-  // get element by hash "#id"
+  function normalizeTabLinks() {
+    $('a[data-toggle="tab"]').each(function() {
+      var h = this.hash;
+      if (h && h.startsWith('#')) {
+        this.setAttribute('href', h);
+        this.setAttribute('data-target', h);
+      }
+    });
+  }
+
   function getByHash(hash) {
     if (!hash || hash === '#') return null;
     return document.getElementById(hash.slice(1));
   }
 
-  // find a tab-link whose hash matches, even if href is a full URL
-  function findTabLinkByHash(hash) {
-    return $('a[data-toggle="tab"]').filter(function() {
-      // this.hash is the part after # even for full URLs
-      return this.hash === hash;
-    }).first();
-  }
-
-  // Show matching tab and/or collapse for a given hash
   function activateFromHash(rawHash, opts) {
     var hash = decodeURIComponent(rawHash || '');
     if (!hash) return;
 
     var force = opts && opts.force;
 
-    // 1) If hash belongs to a tab-pane, show that tab
     var tabPane = getByHash(hash);
     if (tabPane && tabPane.classList.contains('tab-pane')) {
-      var $tabLink = findTabLinkByHash(hash);
+      // now hrefs are already normalized to '#id'
+      var $tabLink = $('a[data-toggle="tab"][href="' + hash + '"]');
       if ($tabLink.length) {
         $tabLink.tab('show');
       }
     }
 
-    // 2) If hash belongs to a collapse, open it, and ensure its parent tab is shown
     var collapseEl = getByHash(hash);
     if (collapseEl && collapseEl.classList.contains('collapse')) {
       var $parentTabPane = $(collapseEl).closest('.tab-pane');
       if ($parentTabPane.length) {
         var paneHash = '#' + $parentTabPane.attr('id');
-        var $parentTabLink = findTabLinkByHash(paneHash);
+        var $parentTabLink = $('a[data-toggle="tab"][href="' + paneHash + '"]');
         if ($parentTabLink.length) {
           $parentTabLink.tab('show');
         }
@@ -321,7 +320,6 @@
     }
   }
 
-  // keep the current ?query but change the hash
   function setHashOnly(idWithoutHash) {
     var base = window.location.origin + window.location.pathname;
     var qs   = window.location.search;
@@ -329,28 +327,24 @@
     history.replaceState(null, '', newUrl);
   }
 
-  // initial load (handles .../faq?csrt=...#target-it-policy)
   $(function() {
+    normalizeTabLinks();
     if (window.location.hash) {
       activateFromHash(window.location.hash, { force: true });
     }
   });
 
-  // if hash changes manually
   window.addEventListener('hashchange', function() {
     activateFromHash(window.location.hash, { force: false });
   });
 
-  // when a tab is shown, update only the hash (even if href is full URL)
   $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function(e) {
-    // e.target.hash works even for full URLs
-    var targetHash = e.target.hash;
+    var targetHash = e.target.getAttribute('href');
     if (targetHash && targetHash.startsWith('#')) {
       setHashOnly(targetHash.slice(1));
     }
   });
 
-  // when an accordion/collapse opens, update only the hash
   $(document).on('shown.bs.collapse', '.collapse', function(e) {
     var id = e.target.id;
     if (id) setHashOnly(id);
