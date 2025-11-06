@@ -272,41 +272,39 @@
 
 <script>
 (function() {
-  // Safely get an element by hash even if the id has special chars
   function getByHash(hash) {
     if (!hash || hash === '#') return null;
     return document.getElementById(hash.slice(1));
   }
 
-  // Show matching tab and/or collapse for a given hash
-  function activateFromHash(rawHash) {
+  function activateFromHash(rawHash, opts) {
     var hash = decodeURIComponent(rawHash || '');
     if (!hash) return;
 
-    // 1) If hash is a tab-pane id -> show its tab
+    var force = opts && opts.force;
+
     var tabPane = getByHash(hash);
     if (tabPane && tabPane.classList.contains('tab-pane')) {
-      // Find the <a data-toggle="tab" href="#...">
       var $tabLink = $('a[data-toggle="tab"][href="' + hash + '"]');
       if ($tabLink.length) $tabLink.tab('show');
     }
 
-    // 2) If hash is a collapse id -> open it and also ensure its parent tab is visible
     var collapseEl = getByHash(hash);
     if (collapseEl && collapseEl.classList.contains('collapse')) {
-      // If this collapse sits inside a tab-pane, show that tab-pane first
       var $parentTabPane = $(collapseEl).closest('.tab-pane');
       if ($parentTabPane.length) {
         var paneId = '#' + $parentTabPane.attr('id');
         var $tabLink2 = $('a[data-toggle="tab"][href="' + paneId + '"]');
         if ($tabLink2.length) $tabLink2.tab('show');
       }
-      // Now open the collapse itself
-      $(collapseEl).collapse('show');
+
+      var $collapse = $(collapseEl);
+      if (force || !$collapse.hasClass('show')) {
+        $collapse.collapse('show');
+      }
     }
   }
 
-  // Preserve existing querystring when UI changes the active tab/collapse
   function setHashOnly(hash) {
     var base = window.location.origin + window.location.pathname;
     var qs   = window.location.search; // keep ?query intact
@@ -314,30 +312,28 @@
     history.replaceState(null, '', newUrl);
   }
 
-  // On initial load (handles ...?csrt=abc#accordion-q23)
   $(function() {
-    if (window.location.hash) activateFromHash(window.location.hash);
+    if (window.location.hash) {
+      activateFromHash(window.location.hash, { force: true });
+    }
   });
 
-  // When the hash changes (e.g., manual edit or other scripts)
   window.addEventListener('hashchange', function() {
-    activateFromHash(window.location.hash);
+    activateFromHash(window.location.hash, { force: false });
   });
 
-  // When a tab is shown, update only the hash (preserve ?query)
   $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function(e) {
-    var href = $(e.target).attr('href'); // like #target-...
+    var href = $(e.target).attr('href');
     if (href && href.startsWith('#')) setHashOnly(href.slice(1));
   });
 
-  // When an accordion/collapse opens, update only the hash
   $(document).on('shown.bs.collapse', '.collapse', function(e) {
-    var id = e.target.id; // collapse id without '#'
+    var id = e.target.id;
     if (id) setHashOnly(id);
   });
 })();
-
 </script>
+
 
 
 @endsection
