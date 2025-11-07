@@ -479,7 +479,7 @@ function iSummernote() {
 		  ['color', ['color']],
 		  ['para', ['ul', 'ol', 'paragraph']],
 		  ['table', ['table']],
-		  ['insert', ['link', 'picture', 'video']],
+		  ['insert', ['link', 'video']],
 		  ['view', []],
 		],
 		callbacks: {
@@ -643,6 +643,7 @@ $(".reply-comment").click(function(e) {
 	$('.modal-reply').show();
 	$('.note-modal').hide();
 	$('#summernote').summernote('code', '<p><br></p>');
+	$('.note-toolbar .note-insert').children().eq(1).remove()
 });
 $(".reasonModalButton").click(function(e) {
 	$('body').append('<div class="modal-backdrop fade show"></div>');
@@ -661,12 +662,15 @@ $(".reasonModalButton").click(function(e) {
 		$('.box-manual-assignment').show();
 		$('.reason-textarea').removeAttr('required');
 	}
+
+	$('.note-toolbar .note-insert').children().eq(1).remove()
 });
 $(".askMoreInfoButton").click(function(e) {
 	$('body').append('<div class="modal-backdrop fade show"></div>');
 	$('.modal-reply3').show();
 	$('.note-modal').hide();
 	$('#summernote-1').summernote();
+	$('.note-toolbar .note-insert').children().eq(1).remove()
 });
 });
 </script>
@@ -1249,7 +1253,6 @@ $(".escalate").click(function(e) {
         }
     });
 });
-
 
 </script>
 

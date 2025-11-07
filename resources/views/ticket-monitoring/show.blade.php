@@ -617,7 +617,7 @@ function iSummernote() {
 		  ['color', ['color']],
 		  ['para', ['ul', 'ol', 'paragraph']],
 		  ['table', ['table']],
-		  ['insert', ['link', 'picture', 'video']],
+		  ['insert', ['link', 'video']],
 		  ['view', []],
 		],
 		callbacks: {
@@ -840,6 +840,7 @@ $(".reply-comment").click(function(e) {
 	$('.modal-reply').show();
 	$('.note-modal').hide();
 	$('#summernote').summernote('code', '<p><br></p>');
+	
 });
 $('.rating-closed').click(function(e) {
 	$('body').append('<div class="modal-backdrop fade show"></div>');
@@ -858,6 +859,7 @@ $(".askMoreInfoButton").click(function(e) {
 	$('.modal-reply3').show();
 	$('.note-modal').hide();
 	$('#summernote-1').summernote();
+	
 });
 </script>
 <script>
