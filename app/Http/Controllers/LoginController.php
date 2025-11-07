@@ -81,8 +81,16 @@ class LoginController extends Controller
 		$ad = $this->authAd($credentials);
 		// $ad = [];  //for bypass authAd
 		if(count($ad) > 0) {
-			$user = User::where('username', $ad['username'])->first();
+            $user = User::where('username', $credentials['username'])->first();
 			if($user) {
+				$contact = DB::table('contact')->where('id', $user->person)->first(['status']);
+
+				if($contact->status == 'Inactive') {
+					return back()->withErrors([
+						'general' => 'Your account is not active.',
+					]);
+				}
+
 				$user->update([
 					'password' => Hash::make($request->password)
 				]);
